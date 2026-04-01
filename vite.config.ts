@@ -24,11 +24,9 @@ export default defineConfig(({ mode }) => {
         rollupOptions: {
           output: {
             manualChunks: (id) => {
-              // Isoler la Secret Gate et les composants Admin
               if (id.includes('Portal_A78x') || id.includes('Gate_X92') || id.includes('GlobalAudit') || id.includes('admin')) {
                 return 'admin-protocol';
               }
-              // Isoler les grosses librairies
               if (id.includes('node_modules')) {
                 if (id.includes('framer-motion')) return 'vendor-motion';
                 if (id.includes('recharts')) return 'vendor-charts';
@@ -38,6 +36,22 @@ export default defineConfig(({ mode }) => {
             }
           }
         }
-      }
+      },
+      test: {
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: './tests/setup.ts',
+        coverage: {
+          provider: 'v8',
+          reporter: ['text', 'json', 'html'],
+          exclude: [
+            'node_modules/',
+            'tests/',
+            '**/*.d.ts',
+            '**/*.config.*',
+            '**/mockData/*',
+          ],
+        },
+      },
     };
 });

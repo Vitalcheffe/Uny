@@ -1,150 +1,236 @@
+/**
+ * ⚡ UNY PROTOCOL: EXPRESS SERVER
+ *
+ * Backend API server for UNY operating system.
+ * Handles: NER masking, Paddle webhooks, checkout helpers.
+ */
+
 import express from 'express';
 import cors from 'cors';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { GoogleGenAI } from '@google/genai';
 import { Environment, LogLevel, Paddle } from '@paddle/paddle-node-sdk';
 import { createClient } from '@supabase/supabase-js';
+import { NEREngine } from './lib/ner-engine';
+import { PaddleService } from './lib/paddle-service';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Initialize Supabase Admin Client
+// --- Environment Validation ---
+const requiredEnvVars = [
+  'VITE_SUPABASE_URL',
+  'SUPABASE_SERVICE_ROLE_KEY',
+] as const;
+
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    console.warn(`⚠️ Missing env var: ${envVar}. Some features may be unavailable.`);
+  }
+}
+
+// --- Initialize Services ---
 const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+const supabaseAdmin = supabaseUrl && supabaseServiceKey
+  ? createClient(supabaseUrl, supabaseServiceKey)
+  : null;
 
-// Initialize Paddle Backend SDK
-const paddle = new Paddle(process.env.PADDLE_API_KEY || '', {
-  environment: Environment.sandbox, // Change to production for live
-  logLevel: LogLevel.verbose,
-});
+const paddle = process.env.PADDLE_API_KEY
+  ? new Paddle(process.env.PADDLE_API_KEY, {
+      environment: Environment.sandbox,
+      logLevel: LogLevel.verbose,
+    })
+  : null;
+
+const nerEngine = process.env.GEMINI_API_KEY
+  ? new NEREngine(process.env.GEMINI_API_KEY)
+  : null;
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  // Middleware for Paddle Webhooks (needs raw body)
-  app.post('/api/paddle/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-    const signature = req.headers['paddle-signature'] as string;
-    const secretKey = process.env.PADDLE_WEBHOOK_SECRET || '';
+  // ============================================================
+  // PADDLE WEBHOOK (raw body needed for signature verification)
+  // ============================================================
+  app.post(
+    '/api/paddle/webhook',
+    express.raw({ type: 'application/json' }),
+    async (req, res) => {
+      try {
+        const signature = req.headers['paddle-signature'] as string;
+        const secretKey = process.env.PADDLE_WEBHOOK_SECRET || '';
+        const rawBody = req.body.toString();
 
-    if (!secretKey || !process.env.PADDLE_API_KEY) {
-      return res.status(400).send('Paddle not configured');
-    }
-
-    try {
-      if (signature) {
-        const eventData = await paddle.webhooks.unmarshal(req.body.toString(), secretKey, signature);
-        
-        // Handle the event
-        if (eventData?.eventType === 'transaction.completed') {
-          const transaction = eventData.data;
-          const orgId = transaction.customData?.org_id;
-          
-          console.log('✅ Payment successful for org:', orgId);
-          
-          if (orgId && supabaseServiceKey) {
-            // Update organization subscription status
-            const { error } = await supabaseAdmin
-              .from('organizations')
-              .update({ 
-                subscription_status: 'active',
-                // Add 30 days for renewal
-                current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-              })
-              .eq('id', orgId);
-              
-            if (error) {
-              console.error('❌ Failed to update Supabase:', error);
-            } else {
-              console.log('✅ Supabase updated successfully.');
-            }
-          }
+        if (!secretKey || !paddle) {
+          return res.status(503).json({ error: 'Paddle not configured' });
         }
+
+        // Verify signature using our PaddleService
+        const isValid = PaddleService.verifyWebhookSignature(
+          rawBody,
+          signature,
+          secretKey
+        );
+
+        if (!isValid) {
+          return res.status(401).json({ error: 'Invalid webhook signature' });
+        }
+
+        // Parse and handle the event
+        const event = JSON.parse(rawBody);
+        const result = await PaddleService.handleWebhookEvent(event);
+
+        res.json(result);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Unknown error';
+        console.error('❌ [Server] Paddle webhook error:', message);
+        res.status(400).json({ error: message });
       }
-
-      res.json({ received: true });
-    } catch (err: any) {
-      res.status(400).send(`Webhook Error: ${err.message}`);
     }
-  });
+  );
 
-  // Standard JSON middleware for other routes
+  // JSON middleware for all other routes
   app.use(express.json());
   app.use(cors());
 
-  // --- NER ENGINE (Powered by Gemini) ---
+  // ============================================================
+  // NER ENGINE - PII Masking
+  // ============================================================
   app.post('/api/ner/mask', async (req, res) => {
     try {
       const { text } = req.body;
-      if (!text) return res.status(400).json({ error: 'Text required' });
 
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey) return res.status(500).json({ error: 'Gemini API Key missing' });
+      if (!text || typeof text !== 'string') {
+        return res.status(400).json({ error: 'Text is required' });
+      }
 
-      const ai = new GoogleGenAI({ apiKey });
-      
-      const prompt = `
-      You are an advanced Named Entity Recognition (NER) and Data Anonymization engine.
-      Your task is to find and mask PII (Personally Identifiable Information) in the following text.
-      
-      Mask the following entities with [REDACTED]:
-      - Names of people
-      - Email addresses
-      - Phone numbers
-      - National ID numbers (CIN, ICE, SSN)
-      - Exact financial amounts (replace with [AMOUNT])
-      
-      Return ONLY the masked text, nothing else.
-      
-      Original Text:
-      ${text}
-      `;
+      if (!nerEngine) {
+        return res.status(503).json({
+          error: 'NER engine unavailable. Check GEMINI_API_KEY.',
+        });
+      }
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.1-pro-preview',
-        contents: prompt,
+      const { anonymized, mapping, entitiesDetected } =
+        await nerEngine.anonymize(text);
+
+      // TODO: Store mapping in Redis for session-based unmasking
+      const sessionId = crypto.randomUUID();
+
+      res.json({
+        sessionId,
+        anonymized,
+        entitiesDetected,
       });
-
-      res.json({ maskedText: response.text });
-    } catch (error: any) {
-      console.error('NER Engine Error:', error);
-      res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'NER failed';
+      console.error('❌ [Server] NER mask error:', message);
+      res.status(500).json({ error: message });
     }
   });
 
-  // --- PADDLE CHECKOUT (Optional Backend Helper) ---
-  app.post('/api/paddle/create-checkout', async (req, res) => {
-    // Paddle v2 uses client-side checkout primarily.
-    // This endpoint can be used to generate a transaction if needed,
-    // but for now we just return success as the frontend handles it via Paddle.js
-    res.json({ success: true });
+  // NER Unmask endpoint (placeholder for Redis integration)
+  app.post('/api/ner/unmask', async (req, res) => {
+    try {
+      const { sessionId, text } = req.body;
+
+      if (!text) {
+        return res.status(400).json({ error: 'Text is required' });
+      }
+
+      // TODO: Retrieve mapping from Redis using sessionId
+      // For now, return as-is
+      res.json({ original: text });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unmask failed';
+      console.error('❌ [Server] NER unmask error:', message);
+      res.status(500).json({ error: message });
+    }
   });
 
-  // --- PADDLE STATS (Admin Dashboard) ---
-  app.get('/api/paddle/stats', async (req, res) => {
+  // ============================================================
+  // PADDLE CHECKOUT HELPER
+  // ============================================================
+  app.post('/api/paddle/create-checkout', async (_req, res) => {
+    // Paddle v2 uses client-side checkout via Paddle.js
+    // This endpoint exists for server-side validation if needed
+    res.json({ success: true, message: 'Use client-side Paddle.js checkout' });
+  });
+
+  // ============================================================
+  // PADDLE STATS (Admin Dashboard)
+  // ============================================================
+  app.get('/api/paddle/stats', async (_req, res) => {
     try {
       if (!process.env.PADDLE_API_KEY) {
-        return res.status(500).json({ error: 'Paddle not configured' });
+        return res.status(503).json({ error: 'Paddle not configured' });
       }
-      
-      // In a real scenario, you would query Paddle API for MRR, Pending, Failed.
-      // Paddle Node SDK provides access to transactions, subscriptions, etc.
-      // For demonstration, we'll return simulated real data structure.
+
+      // In production, query Paddle API for real MRR data
       res.json({
         mrr: 12500,
         pending: 3,
-        failed: 1
+        failed: 1,
       });
-    } catch (error: any) {
-      console.error('Paddle Stats Error:', error);
-      res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Stats error';
+      res.status(500).json({ error: message });
     }
   });
 
-  // Vite integration
+  // ============================================================
+  // ORGANIZATION CREATION (Onboarding flow)
+  // ============================================================
+  app.post('/api/organizations/spawn', async (req, res) => {
+    try {
+      if (!supabaseAdmin) {
+        return res.status(503).json({ error: 'Supabase not configured' });
+      }
+
+      const { companyName, email, sector, teamSize } = req.body;
+
+      if (!companyName || !email) {
+        return res.status(400).json({ error: 'companyName and email required' });
+      }
+
+      const slug = companyName
+        .replace(/[^A-Za-z0-9]/g, '-')
+        .toUpperCase()
+        .slice(0, 30);
+      const timestamp = Date.now().toString().slice(-4);
+      const orgId = `${slug}-${timestamp}`;
+
+      const { error } = await supabaseAdmin.from('organizations').insert({
+        id: orgId,
+        name: companyName,
+        sector: sector || 'TECH',
+        team_size: teamSize || '1',
+        currency: 'MAD',
+        email,
+        subscription_status: 'trial',
+        metadata: {
+          billing_type: 'RECURRING',
+          primary_goal: 'CASHFLOW',
+          ai_preference: 'ASSISTED',
+        },
+      });
+
+      if (error) throw error;
+
+      console.log(`✅ [Server] Organization created: ${orgId}`);
+      res.json({ success: true, orgId });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Spawn failed';
+      console.error('❌ [Server] Org spawn error:', message);
+      res.status(500).json({ error: message });
+    }
+  });
+
+  // ============================================================
+  // VITE DEV SERVER INTEGRATION
+  // ============================================================
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -154,7 +240,7 @@ async function startServer() {
   } else {
     const distPath = path.join(__dirname, 'dist');
     app.use(express.static(distPath));
-    app.get('*all', (req, res) => {
+    app.get('*all', (_req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
