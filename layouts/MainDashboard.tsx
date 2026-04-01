@@ -1,7 +1,7 @@
 /**
- * ⚡ UNY PROTOCOL: MAIN DASHBOARD LAYOUT (V1)
- * Description: Layout principal avec navigation dynamique et transitions Framer Motion.
- * Thème "Light Clarity", Navigation basée sur les rôles.
+ * Main Dashboard Layout
+ *
+ * Primary layout with role-based navigation and Framer Motion transitions.
  */
 
 import React, { useState } from 'react';
@@ -42,8 +42,8 @@ const MainDashboard: React.FC = () => {
   const navItems = [
     { name: 'Nexus Chat', path: '/dashboard/chat', icon: Zap, roles: [UserRole.USER, UserRole.MANAGER, UserRole.ORG_ADMIN, UserRole.SUPER_ADMIN] },
     { name: 'Documents', path: '/dashboard/documents', icon: FileText, roles: [UserRole.USER, UserRole.MANAGER, UserRole.ORG_ADMIN, UserRole.SUPER_ADMIN] },
-    { name: 'Projets', path: '/dashboard/projects', icon: Briefcase, roles: [UserRole.MANAGER, UserRole.ORG_ADMIN, UserRole.SUPER_ADMIN] },
-    { name: 'Équipe', path: '/dashboard/team', icon: Users, roles: [UserRole.ORG_ADMIN, UserRole.SUPER_ADMIN] },
+    { name: 'Projects', path: '/dashboard/projects', icon: Briefcase, roles: [UserRole.MANAGER, UserRole.ORG_ADMIN, UserRole.SUPER_ADMIN] },
+    { name: 'Team', path: '/dashboard/team', icon: Users, roles: [UserRole.ORG_ADMIN, UserRole.SUPER_ADMIN] },
     { name: 'Finance', path: '/dashboard/billing', icon: CreditCard, roles: [UserRole.ORG_ADMIN, UserRole.SUPER_ADMIN] },
   ];
 

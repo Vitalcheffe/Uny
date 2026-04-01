@@ -15,7 +15,7 @@ const XPLevelIndicator = ({ level = 1 }: { level?: number }) => {
   const tiers = [
     { id: 1, label: 'Organiser', desc: 'Silo structurel nominal', color: 'bg-emerald-500' },
     { id: 2, label: 'Connecter', desc: 'Synapses neurales actives', color: 'bg-blue-500' },
-    { id: 3, label: 'Prédire', desc: 'Anticipation des décisions', color: 'bg-purple-600' },
+    { id: 3, label: 'Predict', desc: 'Decision anticipation', color: 'bg-purple-600' },
   ];
 
   return (

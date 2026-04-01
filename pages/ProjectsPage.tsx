@@ -236,7 +236,7 @@ const ProjectsPage: React.FC = () => {
   const columns = [
     { id: 'PROSPECTION', title: 'Prospection', icon: Target },
     { id: 'AUDIT', title: 'Audit en cours', icon: Search },
-    { id: 'DEPLOYED', title: 'Déployé', icon: Rocket }
+    { id: 'DEPLOYED', title: 'Deployed', icon: Rocket }
   ];
 
   const ganttTasks: Task[] = useMemo(() => {
@@ -299,8 +299,8 @@ const ProjectsPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {[
           { label: 'Missions Actives', value: projects.filter(p => p.status !== 'DEPLOYED').length, icon: Activity, color: 'text-blue-600' },
-          { label: 'Capacité Neuronale', value: '84%', icon: Zap, color: 'text-amber-500' },
-          { label: 'Revenus Sécurisés', value: formatMAD(projects.reduce((s, p) => s + (p.revenue || 0), 0), false), icon: DollarSign, color: 'text-emerald-500' },
+          { label: 'Neural Capacity', value: '84%', icon: Zap, color: 'text-amber-500' },
+          { label: 'Secured Revenue', value: formatMAD(projects.reduce((s, p) => s + (p.revenue || 0), 0), false), icon: DollarSign, color: 'text-emerald-500' },
           { label: 'Indice d\'Intégrité', value: 'Optimal', icon: ShieldCheck, color: 'text-indigo-600' },
         ].map((kpi, i) => (
           <div key={i} className="bg-white p-8 rounded-[40px] border border-slate-50 shadow-sm flex items-center gap-8 group hover:shadow-xl transition-all">
@@ -359,7 +359,7 @@ const ProjectsPage: React.FC = () => {
                            <td className="px-12 py-8 text-lg font-black italic uppercase tracking-tighter text-slate-900 group-hover:text-blue-600">{p.name}</td>
                            <td className="px-12 py-8 text-slate-500 uppercase italic text-sm">{typeof p.client === 'string' ? p.client : '---'}</td>
                            <td className="px-12 py-8"><PriorityBadge level={p.priority} /></td>
-                           <td className="px-12 py-8"><span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{p.status === 'DEPLOYED' ? 'Déployé' : p.status === 'AUDIT' ? 'Audit en cours' : p.status === 'PROSPECTION' ? 'Prospection' : 'Inconnu'}</span></td>
+                           <td className="px-12 py-8"><span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{p.status === 'DEPLOYED' ? 'Deployed' : p.status === 'AUDIT' ? 'Audit en cours' : p.status === 'PROSPECTION' ? 'Prospection' : 'Inconnu'}</span></td>
                            <td className="px-12 py-8 text-right font-black italic text-xl">{formatMAD(Number(p.revenue || 0))}</td>
                         </tr>
                       ))}
@@ -393,7 +393,7 @@ const ProjectsPage: React.FC = () => {
                     <h2 className="text-6xl font-black italic uppercase tracking-tighter text-slate-900 leading-[0.9]">{selectedProject.name}</h2>
                     <div className="flex gap-4">
                        <PriorityBadge level={selectedProject.priority} />
-                       <div className="px-4 py-1.5 bg-[#1A1615] text-white rounded-lg text-[9px] font-black uppercase tracking-widest italic">{selectedProject.status === 'DEPLOYED' ? 'Déployé' : selectedProject.status === 'AUDIT' ? 'Audit en cours' : selectedProject.status === 'PROSPECTION' ? 'Prospection' : 'Inconnu'}</div>
+                       <div className="px-4 py-1.5 bg-[#1A1615] text-white rounded-lg text-[9px] font-black uppercase tracking-widest italic">{selectedProject.status === 'DEPLOYED' ? 'Deployed' : selectedProject.status === 'AUDIT' ? 'Audit en cours' : selectedProject.status === 'PROSPECTION' ? 'Prospection' : 'Inconnu'}</div>
                     </div>
                   </header>
 

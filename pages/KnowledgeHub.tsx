@@ -66,7 +66,7 @@ const KnowledgeHub: React.FC = () => {
                   { label: "Montant HT", name: "montantHT" },
                   { label: "TVA (20%)", name: "tva" },
                   { label: "Montant TTC", name: "montantTTC" },
-                  { label: "Date d'échéance", name: "dateEcheance", type: "date" },
+                  { label: "Due Date", name: "dateEcheance", type: "date" },
                 ].map((field) => (
                   <div key={field.name} className="space-y-3">
                     <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-2">{field.label}</label>

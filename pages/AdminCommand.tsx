@@ -262,7 +262,7 @@ const AdminCommand: React.FC = () => {
           {[
             { id: 'STATION', icon: LayoutDashboard, label: 'Station' },
             { id: 'CLIENTS', icon: Users, label: 'Clients' },
-            { id: 'SECURITY', icon: ShieldAlert, label: 'Sécurité' },
+            { id: 'SECURITY', icon: ShieldAlert, label: 'Security' },
             { id: 'BILLING', icon: Wallet, label: 'Billing' },
             { id: 'OSINT', icon: Globe, label: 'OSINT' },
             { id: 'CONFIG', icon: Settings, label: 'Config' }

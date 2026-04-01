@@ -54,7 +54,7 @@ const SpotlightSearch: React.FC = () => {
           id: o.id,
           type: 'ORGANIZATION' as const,
           title: o.name,
-          subtitle: o.sector || 'Secteur Non Défini',
+          subtitle: o.sector || 'Undefined Sector',
           url: `/dashboard?orgId=${o.id}`
         })) || []),
         ...(docs.data?.map(d => ({
@@ -75,9 +75,9 @@ const SpotlightSearch: React.FC = () => {
 
       // Add system commands
       const commands: SearchResult[] = [
-        { id: 'cmd-1', type: 'COMMAND' as const, title: 'Ouvrir Station de Combat', subtitle: 'Accès Super Admin', url: '/uny-command' },
-        { id: 'cmd-2', type: 'COMMAND' as const, title: 'Déployer Nouvelle Mission', subtitle: 'Provisionnement Atomique', url: '/uny-command?action=deploy' },
-        { id: 'cmd-3', type: 'COMMAND' as const, title: 'Audit de Conformité', subtitle: 'Loi 09-08 CNDP', url: '/compliance' }
+        { id: 'cmd-1', type: 'COMMAND' as const, title: 'Open Command Station', subtitle: 'Super Admin Access', url: '/uny-command' },
+        { id: 'cmd-2', type: 'COMMAND' as const, title: 'Deploy New Mission', subtitle: 'Atomic Provisioning', url: '/uny-command?action=deploy' },
+        { id: 'cmd-3', type: 'COMMAND' as const, title: 'Compliance Audit', subtitle: 'Loi 09-08 CNDP', url: '/compliance' }
       ].filter(c => c.title.toLowerCase().includes(searchQuery.toLowerCase()));
 
       setResults([...commands, ...formattedResults]);
@@ -203,10 +203,10 @@ const SpotlightSearch: React.FC = () => {
                   <p className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-700">Suggestions de Commandes</p>
                   <div className="grid grid-cols-2 gap-4">
                     {[
-                      { icon: Zap, label: 'Déployer Mission', cmd: 'deploy' },
-                      { icon: ShieldCheck, label: 'Audit Sécurité', cmd: 'audit' },
+                      { icon: Zap, label: 'Deploy Mission', cmd: 'deploy' },
+                      { icon: ShieldCheck, label: 'Security Audit', cmd: 'audit' },
                       { icon: Building2, label: 'Liste Clients', cmd: 'clients' },
-                      { icon: FileText, label: 'Documents Récents', cmd: 'docs' }
+                      { icon: FileText, label: 'Recent Documents', cmd: 'docs' }
                     ].map((s, i) => (
                       <button 
                         key={i}

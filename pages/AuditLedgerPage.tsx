@@ -107,8 +107,8 @@ const AuditLedgerPage: React.FC = () => {
         {[
           { label: 'Total Actions', value: logs.length, icon: Activity, color: 'text-blue-600' },
           { label: 'Alertes Critiques', value: logs.filter(l => l.severity === 'critical').length, icon: AlertTriangle, color: 'text-rose-600' },
-          { label: 'Dernière Synchro', value: 'LIVE', icon: Clock, color: 'text-emerald-600' },
-          { label: 'Intégrité Blockchain', value: 'VERIFIED', icon: Lock, color: 'text-slate-900' }
+          { label: 'Last Sync', value: 'LIVE', icon: Clock, color: 'text-emerald-600' },
+          { label: 'Blockchain Integrity', value: 'VERIFIED', icon: Lock, color: 'text-slate-900' }
         ].map((stat, i) => (
           <div key={i} className="glass-card p-6 rounded-[32px] border border-white/5 flex items-center gap-6">
             <div className={`p-4 rounded-2xl bg-white shadow-sm ${stat.color}`}>

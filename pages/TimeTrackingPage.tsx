@@ -171,7 +171,7 @@ const TimeTrackingPage: React.FC = () => {
         await firestoreService.addDocument('time_entries', orgId!, {
           user_id: user?.id,
           project_id: selectedProjectId || null,
-          project_name: selectedProjectName || 'Non assigné',
+          project_name: selectedProjectName || 'Unassigned',
           duration_seconds: finalSeconds,
           description: description || '',
           started_at: new Date(Date.now() - finalSeconds * 1000).toISOString(),

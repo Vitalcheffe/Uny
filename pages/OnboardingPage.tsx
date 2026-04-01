@@ -14,23 +14,23 @@ import {
 } from 'lucide-react';
 
 const STEPS = [
-  { id: 1, title: 'Bienvenue.', desc: 'Parlez-nous de votre rôle.' },
-  { id: 2, title: 'Votre Espace.', desc: 'Configurez votre entreprise.' },
-  { id: 3, title: 'Modèle d\'Affaires.', desc: 'Comment générez-vous des revenus ?' },
-  { id: 4, title: 'Prêt au Lancement.', desc: 'Votre environnement est configuré.' }
+  { id: 1, title: 'Welcome.', desc: 'Tell us about your role.' },
+  { id: 2, title: 'Your Workspace.', desc: 'Set up your company.' },
+  { id: 3, title: 'Business Model.', desc: 'How do you generate revenue?' },
+  { id: 4, title: 'Ready to Launch.', desc: 'Your environment is configured.' }
 ];
 
 const ROLES = [
-  { id: 'PDG', icon: Briefcase, desc: 'Direction générale' },
-  { id: 'DAF', icon: Landmark, desc: 'Finance & Légal' },
-  { id: 'Opérations', icon: Target, desc: 'Gestion de projet' },
-  { id: 'Propriétaire d\'Agence', icon: Building, desc: 'Services & Clients' }
+  { id: 'CEO', icon: Briefcase, desc: 'Executive leadership' },
+  { id: 'CFO', icon: Landmark, desc: 'Finance & Legal' },
+  { id: 'Operations', icon: Target, desc: 'Project management' },
+  { id: 'Agency Owner', icon: Building, desc: 'Services & Clients' }
 ];
 
 const BILLING_TYPES = [
-  { id: 'RECURRING', label: 'Abonnement / MRR', icon: RefreshCcw, desc: 'Revenus récurrents' },
-  { id: 'MILESTONE', label: 'Basé sur les Jalons', icon: Target, desc: 'Facturation à l\'avancement' },
-  { id: 'TIME', label: 'Temps & Matériels', icon: Clock, desc: 'Facturation horaire' }
+  { id: 'RECURRING', label: 'Subscription / MRR', icon: RefreshCcw, desc: 'Recurring revenue' },
+  { id: 'MILESTONE', label: 'Milestone-based', icon: Target, desc: 'Progress billing' },
+  { id: 'TIME', label: 'Time & Materials', icon: Clock, desc: 'Hourly billing' }
 ];
 
 const OnboardingPage: React.FC = () => {

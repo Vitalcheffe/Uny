@@ -50,8 +50,8 @@ const SettingsPage: React.FC = () => {
 
         <div className="flex items-center gap-3 bg-white/50 backdrop-blur-xl p-2 rounded-full border border-slate-100 shadow-xl">
            {[
-             { id: 'General', label: 'Unité', icon: Building },
-             { id: 'Roles', label: 'Privilèges', icon: Fingerprint },
+             { id: 'General', label: 'Unit', icon: Building },
+             { id: 'Roles', label: 'Privileges', icon: Fingerprint },
              { id: 'Security', label: 'Bouclier', icon: Shield },
              { id: 'Danger', label: 'Purge', icon: AlertTriangle, color: 'text-rose-500' }
            ].map(tab => (
@@ -119,9 +119,9 @@ const SettingsPage: React.FC = () => {
                    </div>
                    <div className="grid grid-cols-1 gap-6">
                       {[
-                        { label: 'Synapse Multi-Facteurs (MFA)', status: 'Activé', desc: 'Exige une validation biométrique pour les mouvements de capitaux stratégiques.' },
-                        { label: 'Journalisation des Protocoles', status: 'Optimal', desc: 'Chaque interaction avec le noyau est gravée en permanence dans le flux de télémétrie.' },
-                        { label: 'Souveraineté des Données', status: 'Verrouillé', desc: 'Protocoles de poignée de main N4 chiffrés pour les communications inter-unités.' }
+                        { label: 'Multi-Factor Auth (MFA)', status: 'Enabled', desc: 'Requires biometric validation for strategic capital movements.' },
+                        { label: 'Protocol Logging', status: 'Optimal', desc: 'Every kernel interaction is permanently recorded in the telemetry stream.' },
+                        { label: 'Data Sovereignty', status: 'Locked', desc: 'N4 encrypted handshake protocols for inter-unit communications.' }
                       ].map((item, i) => (
                         <div key={i} className="p-8 bg-slate-50 rounded-[40px] flex items-center justify-between border border-slate-100 group hover:bg-white hover:shadow-xl transition-all">
                            <div className="space-y-1">

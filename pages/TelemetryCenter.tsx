@@ -279,7 +279,7 @@ const TelemetryCenter: React.FC = () => {
             <div className="space-y-6">
               <div 
                 className="p-6 bg-rose-50 rounded-3xl border border-rose-100 flex items-center gap-4 cursor-pointer hover:bg-rose-100 transition-all" 
-                onClick={() => setSelectedAnomaly({type: 'FINANCIAL', label: 'Ecart Masse Salariale', description: 'Détection d\'une variation de 15% non planifiée sur le mois en cours.', severity: 'CRITICAL'})}
+                onClick={() => setSelectedAnomaly({type: 'FINANCIAL', label: 'Payroll Variance', description: 'Détection d\'une variation de 15% unplanned for current month.', severity: 'CRITICAL'})}
               >
                 <FileWarning size={20} className="text-rose-500" />
                 <div>

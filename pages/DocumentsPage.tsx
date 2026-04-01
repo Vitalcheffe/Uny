@@ -230,7 +230,7 @@ const DocumentsPage: React.FC = () => {
                      {[
                        { label: 'Nœud de Stockage', status: diagnostics?.bucket || 'FAIL', icon: Server },
                        { label: 'Oracle IA', status: diagnostics?.ai || 'FAIL', icon: Cpu },
-                       { label: 'Base de Données', status: diagnostics?.db || 'OK', icon: Database }
+                       { label: 'Database', status: diagnostics?.db || 'OK', icon: Database }
                      ].map((diag, i) => (
                        <div key={i} className="p-4 bg-white border border-slate-100 rounded-3xl shadow-sm space-y-2">
                           <diag.icon size={16} className={diag.status === 'OK' ? 'text-emerald-500' : 'text-rose-500'} />

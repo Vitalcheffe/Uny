@@ -117,10 +117,10 @@ const EmployeeDrawer: React.FC<EmployeeDrawerProps> = ({ employee, onClose }) =>
                <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-300 italic">Méta-Données Neuronales</h3>
                <div className="bg-white rounded-[32px] border border-slate-100 overflow-hidden divide-y divide-slate-50">
                   {[
-                    { label: 'Département', value: (employee.metadata as any)?.department || 'Opérations', icon: Building2 },
+                    { label: 'Department', value: (employee.metadata as any)?.department || 'Operations', icon: Building2 },
                     { label: 'Date d\'Embauche', value: (employee.metadata as any)?.hire_date ? new Date((employee.metadata as any).hire_date).toLocaleDateString('fr-FR') : '---', icon: Calendar },
-                    { label: 'Ancienneté', value: (employee.metadata as any)?.seniority_years ? `${(employee.metadata as any).seniority_years} Ans` : '---', icon: Clock },
-                    { label: 'Méthode de Provisionnement', value: (employee.metadata as any)?.extracted_via ? 'Automatisé par IA' : 'Saisie Manuelle', icon: Zap }
+                    { label: 'Seniority', value: (employee.metadata as any)?.seniority_years ? `${(employee.metadata as any).seniority_years} years` : '---', icon: Clock },
+                    { label: 'Provisioning Method', value: (employee.metadata as any)?.extracted_via ? 'AI Automated' : 'Manual Entry', icon: Zap }
                   ].map((item, i) => (
                     <div key={i} className="p-6 flex items-center justify-between hover:bg-slate-50 transition-colors">
                       <div className="flex items-center gap-4">

@@ -139,7 +139,7 @@ const TeamPage: React.FC = () => {
            { label: 'Effectif Total', value: employees.length, sub: 'collaborateurs actifs', icon: Users, color: 'text-blue-500' },
            { label: 'Masse Salariale', value: totalSalary.toLocaleString() + ' €', sub: 'annuel brut', icon: Wallet, color: 'text-emerald-500' },
            { label: 'Salaire Moyen', value: avgSalary.toLocaleString() + ' €', sub: 'brut annuel', icon: Landmark, color: 'text-purple-500' },
-           { label: 'Organigramme', value: 'Voir', sub: "structure de l'équipe", icon: Network, color: 'text-blue-500', onClick: () => setViewMode('3d') }
+           { label: 'Org Chart', value: 'Voir', sub: "team structure", icon: Network, color: 'text-blue-500', onClick: () => setViewMode('3d') }
          ].map((s, i) => (
            <div 
             key={i} 
