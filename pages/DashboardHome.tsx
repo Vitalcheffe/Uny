@@ -261,7 +261,7 @@ const DashboardHome: React.FC = () => {
                    letterSpacing: THEME.typography.letterSpacing.mega,
                  }}
                >
-                 Intégrité du Nœud : Nominale
+                 Intégrité du Nœud : Nameinale
                </span>
             </div>
             <h1 
@@ -323,7 +323,7 @@ const DashboardHome: React.FC = () => {
           <StatCardTitan
             title="Missions Actives"
             value={metrics.projects}
-            change={metrics.projects > 0 ? "Actif" : "En attente"}
+            change={metrics.projects > 0 ? "Active" : "En attente"}
             trend={metrics.projects > 0 ? "up" : "neutral"}
             color={THEME.colors.secondary}
             icon={<Briefcase />}

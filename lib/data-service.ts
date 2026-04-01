@@ -56,7 +56,7 @@ export class DataService {
       return data as Organization;
     } catch (error: any) {
       console.error(`❌ [DataService] getOrganization fault: ${error.message}`);
-      toast.error("Erreur lors de la récupération de l'organisation.");
+      toast.error("Error during la récupération de l'organisation.");
       return null;
     }
   }
@@ -99,7 +99,7 @@ export class DataService {
       return docData as UnyDocument;
     } catch (error: any) {
       console.error(`❌ [DataService] uploadDocument fault: ${error.message}`);
-      toast.error(`Échec de l'upload: ${error.message}`);
+      toast.error(`Failure de l'upload: ${error.message}`);
       return null;
     }
   }
@@ -143,7 +143,7 @@ export class DataService {
       return true;
     } catch (error: any) {
       console.error(`❌ [DataService] deleteDocument fault: ${error.message}`);
-      toast.error('Erreur lors de la suppression du document.');
+      toast.error('Error during la suppression du document.');
       return false;
     }
   }
@@ -183,7 +183,7 @@ export class DataService {
       return true;
     } catch (error: any) {
       console.error(`❌ [DataService] createAuditRequest fault: ${error.message}`);
-      toast.error(`Échec de l'envoi: ${error.message}`);
+      toast.error(`Failure de l'envoi: ${error.message}`);
       return false;
     }
   }

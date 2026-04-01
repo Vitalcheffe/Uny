@@ -78,7 +78,7 @@ export class PaddleService {
       });
     } catch (error) {
       console.error('❌ [Paddle] Checkout error:', error);
-      toast.error("Erreur lors de l'ouverture du paiement.");
+      toast.error("Error during l'ouverture du paiement.");
     }
   }
 

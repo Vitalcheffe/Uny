@@ -14,7 +14,7 @@ const ROLE_DATA: Record<UserRole, { title: string, desc: string, color: string }
   SUPER_ADMIN: { title: 'Super Admin', desc: 'Orchestration d\'entreprise. Supervision inter-unités et accès infrastructure.', color: 'text-rose-700' },
   ADMIN: { title: 'Admin', desc: 'Opérations complètes. Ne peut pas supprimer l\'organisation ou changer de forfait.', color: 'text-rose-500' },
   MANAGER: { title: 'Manager', desc: 'Gestion d\'équipe. Supervision des projets et des membres de l\'équipe.', color: 'text-indigo-500' },
-  EMPLOYEE: { title: 'Employé', desc: 'Membre standard. Accès aux outils de base et aux projets assignés.', color: 'text-slate-500' },
+  EMPLOYEE: { title: 'Employé', desc: 'Member standard. Accès aux outils de base et aux projets assignés.', color: 'text-slate-500' },
   FINANCE_CONTROLLER: { title: 'Contrôleur Financier', desc: 'Focus Comptabilité & Trésorerie. Accès au rapprochement bancaire.', color: 'text-emerald-600' },
   DIR_RH: { title: 'Directeur RH', desc: 'Contrôle stratégique du capital humain. Accès complet au coffre-fort et à la conformité.', color: 'text-blue-700' },
   HR_MANAGER: { title: 'Manager RH', desc: 'Accès au coffre-fort des employés. Paie, contrats et données de santé.', color: 'text-blue-600' },

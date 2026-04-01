@@ -85,7 +85,7 @@ const CompaniesMaster: React.FC = () => {
       toast.success(`Organisation ${org.is_active ? 'suspendue' : 'activée'} avec succès.`);
       fetchOrgs();
     } catch (err: any) {
-      toast.error(`Échec du basculement: ${err.message}`);
+      toast.error(`Failure du basculement: ${err.message}`);
     }
   };
 
@@ -150,7 +150,7 @@ const CompaniesMaster: React.FC = () => {
           { label: 'Active Orgs', value: orgs.filter(o => o.is_active).length, icon: Building2, color: 'text-orange-500' },
           { label: 'Total Employees', value: orgs.reduce((acc, o) => acc + (o.employee_count || 0), 0), icon: Users, color: 'text-blue-500' },
           { label: 'System Load', value: '0.42ms', icon: Activity, color: 'text-emerald-500' },
-          { label: 'Security Status', value: 'Nominal', icon: ShieldCheck, color: 'text-indigo-500' },
+          { label: 'Security Status', value: 'Nameinal', icon: ShieldCheck, color: 'text-indigo-500' },
         ].map((stat, i) => (
           <div key={i} className="bg-[#0a0a0a] border border-white/5 p-6 rounded-[32px] flex items-center gap-4 shadow-xl">
             <div className={`w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center ${stat.color}`}>

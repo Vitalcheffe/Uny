@@ -183,7 +183,7 @@ const ManageEntityModal: React.FC<ManageEntityModalProps> = ({ isOpen, onClose, 
                         </svg>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm font-black italic uppercase tracking-tight text-white">Protocole N4 Actif</p>
+                        <p className="text-sm font-black italic uppercase tracking-tight text-white">Protocole N4 Active</p>
                         <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Chiffrement de bout en bout validé.</p>
                       </div>
                     </div>

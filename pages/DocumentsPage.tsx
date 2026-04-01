@@ -179,7 +179,7 @@ const DocumentsPage: React.FC = () => {
              </button>
              <div className="px-6 py-3 bg-white border border-slate-100 rounded-2xl shadow-sm flex items-center gap-3">
                 <ShieldCheck size={16} className="text-emerald-500" />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Sécurité : Nominale</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Sécurité : Nameinale</span>
              </div>
           </div>
         </header>
@@ -211,7 +211,7 @@ const DocumentsPage: React.FC = () => {
                       Glisser & Déposer <span className="text-blue-600">Charge Utile</span>
                     </h3>
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-widest max-w-xs mx-auto leading-relaxed italic">
-                      Cartographie Légale Automatisée pour Factures, Contrats et Nœuds de Données.
+                      Cartographie Légale Automatisée pour Invoices, Contracts et Nœuds de Données.
                     </p>
                   </div>
                 </>
@@ -223,7 +223,7 @@ const DocumentsPage: React.FC = () => {
                   <div className="space-y-3">
                     <h3 className="text-2xl font-black italic uppercase text-slate-900">Arrêt de Synchronisation du Noyau</h3>
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
-                      Échec du protocole de poignée de main. Consultez le diagnostic système ci-dessous.
+                      Failure du protocole de poignée de main. Consultez le diagnostic système ci-dessous.
                     </p>
                   </div>
                   <div className="grid grid-cols-3 gap-3">
@@ -282,7 +282,7 @@ const DocumentsPage: React.FC = () => {
                 <Search size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
                 <input 
                   type="text" 
-                  placeholder="Rechercher des nœuds..." 
+                  placeholder="Search...s nœuds..." 
                   className="w-full bg-white border border-slate-200 rounded-full py-3.5 pl-12 pr-6 text-xs outline-none focus:ring-4 focus:ring-blue-500/5 font-bold italic"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}

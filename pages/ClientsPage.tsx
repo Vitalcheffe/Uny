@@ -92,13 +92,13 @@ const ImpersonationTool = ({ clientId }: { clientId: string }) => {
         <span className="text-[10px] font-black uppercase tracking-widest">Super Admin Protocol</span>
       </div>
       <p className="text-[10px] font-bold text-amber-700 leading-relaxed italic uppercase">
-        Accès direct au nœud client pour maintenance ou support critique.
+        Direct access to client node for maintenance or critical support.
       </p>
       <button 
         onClick={() => alert(`Initialisation du protocole d'impersonation pour: ${clientId}`)}
         className="w-full py-4 bg-amber-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-amber-700 transition-all italic"
       >
-        Impersonner l'Entité
+        Impersonate Entity
       </button>
     </div>
   );
@@ -152,8 +152,8 @@ const ClientsPage: React.FC = () => {
       if (data && data.length > 0) {
         const totalLtv = data.reduce((acc: number, curr: any) => acc + (curr.revenue_attribution || 0), 0);
         const avgLtv = totalLtv / data.length;
-        if (avgLtv > 50000) setExpansionRisk('Élevé');
-        else if (avgLtv > 10000) setExpansionRisk('Modéré');
+        if (avgLtv > 50000) setExpansionRisk('High');
+        else if (avgLtv > 10000) setExpansionRisk('Medium');
         else setExpansionRisk('Faible');
       } else {
         setExpansionRisk('N/A');
@@ -303,7 +303,7 @@ const ClientsPage: React.FC = () => {
               Registre <span className="text-blue-600">des Clients</span>
             </h1>
           </div>
-          <p className="text-xs text-slate-400 font-black uppercase tracking-[0.5em] ml-16 italic">Mémoire Relationnelle d'Entreprise</p>
+          <p className="text-xs text-slate-400 font-black uppercase tracking-[0.5em] ml-16 italic">Enterprise Relational Memory</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-4 w-full xl:w-auto">
@@ -311,7 +311,7 @@ const ClientsPage: React.FC = () => {
               <Search size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
               <input 
                 type="text" 
-                placeholder="Rechercher des Nœuds d'Identité..." 
+                placeholder="Search Identity Nodes..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full bg-white border border-slate-100 shadow-sm rounded-full py-5 pl-16 pr-8 text-sm outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold italic"
@@ -416,15 +416,15 @@ const ClientsPage: React.FC = () => {
                      </h3>
                      <div className="flex items-center gap-4">
                         <SentimentBadge score={client.sentiment_score || 82} />
-                        <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{client.metadata?.industry || 'Secteur Général'}</span>
+                        <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{client.metadata?.industry || 'General Sector'}</span>
                      </div>
                   </div>
                </div>
 
                <div className="grid grid-cols-3 gap-8 py-8 border-y border-slate-50">
-                  <MetricMini label="Valeur à Vie" value={formatMAD(client.revenue_attribution || 0, false)} color="text-emerald-600" />
-                  <MetricMini label="Nœuds Actifs" value="04" color="text-blue-500" />
-                  <MetricMini label="Statut" value={client.status} color="text-slate-900" />
+                  <MetricMini label="Lifetime Value" value={formatMAD(client.revenue_attribution || 0, false)} color="text-emerald-600" />
+                  <MetricMini label="Nœuds Actives" value="04" color="text-blue-500" />
+                  <MetricMini label="Status" value={client.status} color="text-slate-900" />
                </div>
 
                <div className="pt-8 flex items-center justify-between">
@@ -447,7 +447,7 @@ const ClientsPage: React.FC = () => {
                  <Users size={40} className="text-slate-300" />
                </div>
                <div className="space-y-2">
-                 <p className="text-2xl font-black uppercase tracking-tighter text-slate-900">Aucun Nœud Client Détecté</p>
+                 <p className="text-2xl font-black uppercase tracking-tighter text-slate-900">No Client Node Detected</p>
                  <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Le registre est actuellement vide.</p>
                </div>
                <button 
@@ -460,7 +460,7 @@ const ClientsPage: React.FC = () => {
           ) : filteredClients.length === 0 && !loading ? (
             <div className="col-span-full py-40 text-center space-y-8 opacity-20 italic">
                <Users size={80} className="mx-auto" />
-               <p className="text-2xl font-black uppercase tracking-tighter">Zéro Nœud Détecté dans la Plage de Filtre</p>
+               <p className="text-2xl font-black uppercase tracking-tighter">Zero Nodes Detected in Filter Range</p>
             </div>
           ) : null}
         </div>
@@ -522,7 +522,7 @@ const ClientsPage: React.FC = () => {
                        <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4 text-blue-400">
                              <Sparkles size={20} />
-                             <span className="text-[11px] font-black uppercase tracking-[0.5em]">Intelligence Légale</span>
+                             <span className="text-[11px] font-black uppercase tracking-[0.5em]">Legal Intelligence</span>
                           </div>
                           {aiReport && (
                             <div className="px-4 py-1 bg-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest">
@@ -547,7 +547,7 @@ const ClientsPage: React.FC = () => {
                             </div>
                             <div className="p-6 bg-blue-600 rounded-3xl border border-blue-400 flex items-center justify-between">
                                <div>
-                                  <p className="text-[9px] font-black uppercase tracking-widest text-blue-200 mb-1">Logique de Nœud Recommandée</p>
+                                  <p className="text-[9px] font-black uppercase tracking-widest text-blue-200 mb-1">Recommended Node Logic</p>
                                   <p className="text-sm font-black italic uppercase">{aiReport.recommended_action}</p>
                                </div>
                                <Zap size={24} fill="white" />
@@ -565,7 +565,7 @@ const ClientsPage: React.FC = () => {
                                  disabled={analyzingId !== null}
                                  className="px-10 py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-3xl font-black text-[11px] uppercase tracking-[0.3em] transition-all shadow-2xl italic flex items-center gap-4"
                                >
-                                 {analyzingId ? 'Interception des Données...' : 'Analyser la Relation'}
+                                 {analyzingId ? 'Intercepting Data...' : 'Analyze Relationship'}
                                  <ArrowRight size={16} />
                                </button>
                             </div>

@@ -196,7 +196,7 @@ const SpotlightSearch: React.FC = () => {
                   <div className="w-16 h-16 rounded-3xl bg-white/5 border border-white/5 flex items-center justify-center text-zinc-700 mx-auto">
                     <Search size={32} />
                   </div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 italic">Aucun résultat pour "{query}"</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 italic">No results pour "{query}"</p>
                 </div>
               ) : (
                 <div className="py-12 text-center space-y-6">
@@ -225,7 +225,7 @@ const SpotlightSearch: React.FC = () => {
             <div className="p-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-between text-[8px] font-black text-zinc-600 uppercase tracking-widest">
               <div className="flex items-center gap-6">
                 <span className="flex items-center gap-1"><ChevronRight size={10} /> Sélectionner</span>
-                <span className="flex items-center gap-1"><Command size={10} /> Entrée Ouvrir</span>
+                <span className="flex items-center gap-1"><Command size={10} /> Entrée Open</span>
               </div>
               <span>UNY Spotlight Engine v1.0</span>
             </div>

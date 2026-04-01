@@ -66,12 +66,12 @@ const UserManagement: React.FC<UserManagementProps> = ({ organizationId }) => {
 
       if (error) throw error;
 
-      toast.success(`Mot de passe réinitialisé pour ${employee.full_name}.`);
+      toast.success(`Password réinitialisé pour ${employee.full_name}.`);
       // In production, show new password or send via email
       alert(`Nouveau mot de passe généré: ${newPassword}\n(À transmettre manuellement à l'utilisateur)`);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      toast.error(`Échec du reset: ${message}`);
+      toast.error(`Failure du reset: ${message}`);
     }
   };
 

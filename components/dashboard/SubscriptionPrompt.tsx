@@ -69,7 +69,7 @@ const SubscriptionPrompt: React.FC = () => {
               </h3>
               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed max-w-2xl">
                 Votre <span className="text-white font-black italic">MOAT INDEX</span> est de <span className="text-amber-500">{moatIndex}%</span>. 
-                Supprimer votre compte = <span className="text-rose-500 underline">PERDRE DÉFINITIVEMENT</span> les <span className="text-white">{synapseCount} connexions intelligentes</span> créées par l'IA entre vos projets, clients et factures.
+                Delete votre compte = <span className="text-rose-500 underline">PERDRE DÉFINITIVEMENT</span> les <span className="text-white">{synapseCount} connexions intelligentes</span> créées par l'IA entre vos projets, clients et factures.
               </p>
            </div>
         </div>

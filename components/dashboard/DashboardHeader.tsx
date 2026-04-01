@@ -45,7 +45,7 @@ const DashboardHeader: React.FC = () => {
           <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-700 transition-colors" />
           <input 
             type="text" 
-            placeholder="Rechercher des documents, entités..." 
+            placeholder="Search...s documents, entités..." 
             className="w-full bg-slate-100 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/10 focus:bg-white focus:border-blue-700 transition-all font-medium placeholder:text-slate-400"
           />
         </div>

@@ -53,7 +53,7 @@ const AnomalyResolutionPanel = ({ anomaly, onClose }: { anomaly: any, onClose: (
 
       setResolution(response.text || "Chemin neural indéterminé.");
     } catch (err) {
-      setResolution("Échec dans la synapse de résolution.");
+      setResolution("Failure dans la synapse de résolution.");
     } finally {
       setLoading(false);
     }

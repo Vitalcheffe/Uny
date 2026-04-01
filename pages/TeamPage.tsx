@@ -110,7 +110,7 @@ const TeamPage: React.FC = () => {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
         <div className="space-y-2">
           <h1 className="text-4xl font-black italic uppercase tracking-tighter text-slate-900 leading-none">
-            Équipe
+            Team
           </h1>
           <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">
             Gérez les membres de votre organisation
@@ -162,7 +162,7 @@ const TeamPage: React.FC = () => {
         <div className="relative group w-full md:w-96">
           <Search size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input 
-            type="text" placeholder="Rechercher un collaborateur..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+            type="text" placeholder="Search... collaborateur..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-white border border-slate-100 shadow-sm rounded-full py-3.5 pl-12 pr-6 text-xs outline-none focus:ring-4 focus:ring-blue-500/10 font-bold italic"
           />
         </div>

@@ -29,7 +29,7 @@ export class PIIMasker {
     // Moroccan IBAN: MA64 + 20 chiffres
     IBAN_MA: /MA[0-9]{22}/g,
     
-    // Noms propres (Approximation: Mots capitalisés suivis d'un autre mot capitalisé)
+    // Names propres (Approximation: Mots capitalisés suivis d'un autre mot capitalisé)
     // Note: Risk of false positives, use sparingly or with allowlist/noire
     NAME: /\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+\b/g,
   };
@@ -58,7 +58,7 @@ export class PIIMasker {
       return placeholder;
     });
 
-    // 3. Masquage des Téléphones
+    // 3. Masquage des Phones
     maskedText = maskedText.replace(this.PATTERNS.PHONE, (match) => {
       const placeholder = `{{USER_PHONE_${counter++}}}`;
       mapping.set(placeholder, match);

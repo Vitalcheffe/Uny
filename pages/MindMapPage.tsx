@@ -22,7 +22,7 @@ const nodeStyles: Record<string, any> = {
 };
 
 const MindMapPage: React.FC = () => {
-  const { orgId, profile: userProfile } = useAuth();
+  const { orgId, profile: userProfilee } = useAuth();
   const [nodes, setNodes, onNodesChangeState] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [loading, setLoading] = useState(false);
@@ -51,7 +51,7 @@ const MindMapPage: React.FC = () => {
       // Node Central: L'Organisation
       newNodes.push({
         id: 'org_center',
-        data: { label: userProfile?.metadata?.company_name || 'KERNEL CORE' },
+        data: { label: userProfilee?.metadata?.company_name || 'KERNEL CORE' },
         position: { x: 500, y: 500 },
         style: nodeStyles.organization,
         type: 'default',
@@ -77,7 +77,7 @@ const MindMapPage: React.FC = () => {
           }
         });
 
-        // Connexions Synaptiques avec Animation de Flux
+        // Logins Synaptiques avec Animation de Flux
         newEdges.push({
           id: `synapse-${p.id}`,
           source: 'org_center',
@@ -105,7 +105,7 @@ const MindMapPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [orgId, userProfile, setNodes, setEdges]);
+  }, [orgId, userProfilee, setNodes, setEdges]);
 
   // Highlight effect when a node is selected
   useEffect(() => {
@@ -179,7 +179,7 @@ const MindMapPage: React.FC = () => {
             </div>
             <h1 className="text-4xl font-black italic uppercase tracking-tighter text-slate-900">Graphe de <span className="text-blue-600">Connaissance</span></h1>
           </div>
-          <p className="text-xs text-slate-400 font-black uppercase tracking-[0.5em] ml-16 italic">Visualisation des Connexions Neuronales</p>
+          <p className="text-xs text-slate-400 font-black uppercase tracking-[0.5em] ml-16 italic">Visualisation des Logins Neuronales</p>
         </div>
 
         <div className="flex items-center gap-6">

@@ -20,7 +20,7 @@ const EarningChart: React.FC<EarningChartProps> = ({ projects }) => {
     const now = new Date();
     const result = [];
     
-    const annualGoal = profile?.metadata?.annual_revenue_goal || 0;
+    const annualGoal = Number(profile?.metadata?.annual_revenue_goal) || 0;
     const monthlyTarget = annualGoal / 12;
 
     const activeProjects = projects.filter(p => p.status === 'Completed' && p.created_at);
@@ -119,7 +119,7 @@ const EarningChart: React.FC<EarningChartProps> = ({ projects }) => {
                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Target Mode</p>
                <p className="text-[11px] font-bold text-slate-900 uppercase italic">
                  {profile?.metadata?.annual_revenue_goal 
-                  ? `Synchronized on $${((profile?.metadata?.annual_revenue_goal || 0) / 1000).toFixed(0)}k USD / year`
+                  ? `Synchronized on $${(Number(profile?.metadata?.annual_revenue_goal || 0) / 1000).toFixed(0)}k USD / year`
                   : 'Goal not calibrated'
                  }
                </p>

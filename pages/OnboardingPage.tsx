@@ -125,7 +125,7 @@ const OnboardingPage: React.FC = () => {
 
       navigate('/dashboard', { replace: true });
     } catch (err: any) {
-      toast.error(err.message || "Échec de la configuration de l'espace de travail. Veuillez réessayer.", { position: 'top-right' });
+      toast.error(err.message || "Failure de la configuration de l'espace de travail. Veuillez réessayer.", { position: 'top-right' });
     } finally {
       setLoading(false);
     }
@@ -213,7 +213,7 @@ const OnboardingPage: React.FC = () => {
                       />
                     </div>
                     <div className="space-y-3">
-                      <label className="text-sm font-semibold text-slate-700">Nom</label>
+                      <label className="text-sm font-semibold text-slate-700">Name</label>
                       <input 
                         value={formData.lastName}
                         onChange={(e) => setFormData({...formData, lastName: e.target.value})}
@@ -263,7 +263,7 @@ const OnboardingPage: React.FC = () => {
               {step === 2 && (
                 <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="space-y-10">
                   <div className="space-y-3">
-                    <label className="text-sm font-semibold text-slate-700">Nom Légal de l'Entreprise</label>
+                    <label className="text-sm font-semibold text-slate-700">Name Légal de l'Entreprise</label>
                     <input 
                       value={formData.companyName}
                       onChange={(e) => setFormData({...formData, companyName: e.target.value})}
@@ -377,7 +377,7 @@ const OnboardingPage: React.FC = () => {
                 disabled={step === 1 || loading}
                 className={`flex items-center gap-2 text-base font-semibold text-slate-400 transition-all duration-300 ${step === 1 ? 'opacity-0 pointer-events-none' : 'hover:text-indigo-950 hover:-translate-x-1'}`}
               >
-                <ArrowLeft size={20} /> Retour
+                <ArrowLeft size={20} /> Back
               </button>
               
               <div className="flex items-center gap-6">

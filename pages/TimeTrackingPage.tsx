@@ -15,7 +15,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 const TimeTrackingPage: React.FC = () => {
   const { orgId, profile, user } = useAuth();
   
-  // États du Timer
+  // Timer States
   const [timerState, setTimerState] = useState<'stopped' | 'running' | 'paused'>('stopped');
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [description, setDescription] = useState('');
@@ -28,7 +28,7 @@ const TimeTrackingPage: React.FC = () => {
   const [timeEntries, setTimeEntries] = useState<any[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
 
-  // États IA
+  // AI States
   const [suggestedProjectId, setSuggestedProjectId] = useState<string | null>(null);
   const [isSuggesting, setIsSuggesting] = useState(false);
 
@@ -141,7 +141,7 @@ const TimeTrackingPage: React.FC = () => {
     return () => clearTimeout(timer);
   }, [description, handleAISuggestion]);
 
-  // Contrôles du Timer
+  // Timer Controls
   const handleStart = () => {
     setTimerState('running');
     intervalRef.current = setInterval(() => {
@@ -220,7 +220,7 @@ const TimeTrackingPage: React.FC = () => {
               SUIVI DU <span className="text-blue-600">TEMPS</span>
             </h1>
           </div>
-          <p className="text-xs text-slate-400 font-black uppercase tracking-[0.5em] ml-16 italic">Chronomètre Tactique Opérationnel</p>
+          <p className="text-xs text-slate-400 font-black uppercase tracking-[0.5em] ml-16 italic">Operational Tactical Timer</p>
         </div>
       </div>
 
@@ -291,7 +291,7 @@ const TimeTrackingPage: React.FC = () => {
           <div className="flex-1 w-full space-y-8">
              <div className="space-y-2">
                 <div className="flex items-center justify-between ml-4">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Nœud de Projet Cible</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Nœud de Project Cible</label>
                   <AnimatePresence>
                     {suggestedProjectId && (
                       <motion.button
@@ -319,7 +319,7 @@ const TimeTrackingPage: React.FC = () => {
                     }}
                     className={`w-full pl-16 pr-8 py-5 bg-white/5 border border-white/10 rounded-3xl outline-none transition-all font-bold text-sm italic appearance-none cursor-pointer text-slate-300 focus:text-white ${suggestedProjectId ? 'ring-2 ring-blue-500/50' : 'focus:border-blue-500'}`}
                   >
-                    <option value="" className="bg-[#1a1615]">-- Aucun Lien de Projet --</option>
+                    <option value="" className="bg-[#1a1615]">-- Aucun Lien de Project --</option>
                     {projects.map(p => (
                       <option key={p.id} value={p.id} className="bg-[#1a1615]">
                         {p.name} ({typeof p.client === 'string' ? p.client : 'Global'})
@@ -335,7 +335,7 @@ const TimeTrackingPage: React.FC = () => {
                   {isSuggesting && (
                     <div className="flex items-center gap-2 text-blue-500">
                       <Loader2 size={10} className="animate-spin" />
-                      <span className="text-[8px] font-black uppercase tracking-widest">Prédiction du Nœud...</span>
+                      <span className="text-[8px] font-black uppercase tracking-widest">Node Prediction...</span>
                     </div>
                   )}
                 </div>
@@ -344,7 +344,7 @@ const TimeTrackingPage: React.FC = () => {
                    <textarea 
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Entrez le contexte du journal d'activité..."
+                    placeholder="Enter activity log context..."
                     className="w-full pl-16 pr-8 py-6 bg-white/5 border border-white/10 rounded-3xl outline-none focus:border-blue-500 font-bold transition-all text-sm italic h-32 resize-none text-slate-300 focus:text-white placeholder:text-slate-700"
                    />
                 </div>
@@ -360,7 +360,7 @@ const TimeTrackingPage: React.FC = () => {
               <History size={18} className="text-slate-400" />
               <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400 italic">Journal du Registre Temporel</h3>
            </div>
-           <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{timeEntries.length} Signaux Capturés</span>
+           <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{timeEntries.length} Signals Captured</span>
         </div>
 
         <div className="bg-white rounded-[48px] border border-slate-100 shadow-xl overflow-hidden">
@@ -369,7 +369,7 @@ const TimeTrackingPage: React.FC = () => {
           ) : timeEntries.length === 0 ? (
             <div className="py-24 text-center space-y-4 opacity-30">
                <Zap size={48} className="mx-auto text-slate-300" />
-               <p className="text-[11px] font-black uppercase tracking-[0.4em]">Aucune activité détectée dans le flux temporel.</p>
+               <p className="text-[11px] font-black uppercase tracking-[0.4em]">No activity detected in temporal flow.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -377,7 +377,7 @@ const TimeTrackingPage: React.FC = () => {
                 <thead className="bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase tracking-widest">
                   <tr>
                     <th className="px-10 py-6">Nœud de Mission</th>
-                    <th className="px-10 py-6">Journal Opérationnel</th>
+                    <th className="px-10 py-6">Operational Log</th>
                     <th className="px-10 py-6">Magnitude (Temps)</th>
                     <th className="px-10 py-6 text-right">Date d'Interception</th>
                   </tr>

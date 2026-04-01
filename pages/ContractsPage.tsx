@@ -528,7 +528,7 @@ const ContractsPage: React.FC = () => {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-2">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-4">Identification du Contrat</label>
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-4">Identification du Contract</label>
                     <input 
                       type="text" required value={formData.title}
                       onChange={(e) => setFormData({...formData, title: e.target.value})}

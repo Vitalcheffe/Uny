@@ -89,7 +89,7 @@ const KnowledgeRegistry = () => {
           <div className="space-y-2">
             <h1 className="text-5xl font-[950] text-slate-900 tracking-tighter leading-none italic uppercase">Archive <span className="text-blue-600">Analytique</span></h1>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.6em] italic flex items-center gap-3">
-              <Database size={12} /> Matrice d'Intelligence Légale // Racine : {orgId}
+              <Database size={12} /> Legal Intelligence Matrix // Racine : {orgId}
             </p>
           </div>
         </div>
@@ -123,7 +123,7 @@ const KnowledgeRegistry = () => {
           <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors" size={20} />
           <input
             type="text"
-            placeholder="Rechercher des Atomes d'Intelligence..."
+            placeholder="Search...s Atomes d'Intelligence..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-16 pr-8 py-5 bg-slate-50 border border-slate-100 rounded-3xl focus:bg-white focus:ring-8 focus:ring-blue-500/5 outline-none transition-all font-bold italic"
@@ -174,7 +174,7 @@ const KnowledgeRegistry = () => {
                    <div className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest ${
                      atom.validation_status === 'approved' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
                    }`}>
-                     {atom.validation_status === 'approved' ? 'Approuvé' : atom.validation_status === 'rejected' ? 'Rejeté' : 'En attente'}
+                     {atom.validation_status === 'approved' ? 'Approved' : atom.validation_status === 'rejected' ? 'Rejected' : 'Pending'}
                    </div>
                 </div>
               </div>
@@ -239,7 +239,7 @@ const KnowledgeRegistry = () => {
 
                         <div className="bg-slate-900 text-white rounded-[40px] p-10 relative overflow-hidden">
                            <div className="absolute top-0 right-0 p-8 opacity-5"><Zap size={100} /></div>
-                           <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-4">Nœud Analytique Structuré (JSON)</p>
+                           <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-4">Structured Analytics Node (JSON)</p>
                            <pre className="text-[10px] font-mono opacity-80 overflow-x-auto p-4 bg-black/30 rounded-2xl">
                              {JSON.stringify(selectedAtom.value, null, 2)}
                            </pre>
@@ -251,7 +251,7 @@ const KnowledgeRegistry = () => {
                            <CheckCircle size={20} /> Autoriser le Fait
                         </button>
                         <button onClick={() => validateAtom(selectedAtom.id, 'reject')} className="px-10 py-7 bg-rose-50 text-rose-600 rounded-[32px] font-black text-[11px] uppercase tracking-[0.4em] hover:bg-rose-600 hover:text-white transition-all italic border border-rose-100">
-                           Révoquer
+                           Revoke
                         </button>
                      </div>
                   </div>

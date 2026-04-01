@@ -242,7 +242,7 @@ const AdminCommand: React.FC = () => {
         </div>
         <div className="space-y-2 text-center">
           <p className="text-sm font-black uppercase tracking-[0.6em] text-blue-500 animate-pulse">Initialisation du Noyau</p>
-          <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Chargement de la Station de Combat Industrielle...</p>
+          <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Loading... la Station de Combat Industrielle...</p>
         </div>
       </div>
     );
@@ -369,7 +369,7 @@ const AdminCommand: React.FC = () => {
               onClick={handleDeployMission}
               className="flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 italic"
             >
-              <Zap size={14} fill="white" /> Déployer Mission
+              <Zap size={14} fill="white" /> Deploy Mission
             </button>
             <CreateOrganization onSuccess={() => logAction('organization_deployed')} />
           </div>
@@ -402,7 +402,7 @@ const AdminCommand: React.FC = () => {
             {/* Organizations Management */}
             <div className="bg-white/5 rounded-[40px] border border-white/5 flex flex-col h-[600px]">
               <div className="p-8 border-b border-white/5 flex justify-between items-center">
-                <h3 className="text-lg font-black italic uppercase tracking-tighter text-white">Gestion des Entités</h3>
+                <h3 className="text-lg font-black italic uppercase tracking-tighter text-white">Entity Management</h3>
                 <div className="flex items-center gap-2">
                   <button onClick={() => setViewMode('GRID')} className={`p-2 rounded-lg transition-all ${viewMode === 'GRID' ? 'bg-blue-600 text-white' : 'text-zinc-500 hover:text-white'}`}>
                     <LayoutDashboard size={14} />

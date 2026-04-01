@@ -10,7 +10,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import i18n from '../lib/i18n';
 import { useTranslation } from 'react-i18next';
 
-type SupportedLanguage = 'en' | 'fr';
+type SupportedLanguage = 'en' | 'fr' | 'ar' | 'ary';
 
 interface LanguageContextType {
   language: SupportedLanguage;
@@ -87,7 +87,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const initLanguage = async () => {
       // 1. Check saved preference first
       const savedLang = localStorage.getItem('uny_language') as SupportedLanguage;
-      if (savedLang === 'en' || savedLang === 'fr') {
+      if (savedLang === 'en' || savedLang === 'fr' || savedLang === 'ar' || savedLang === 'ary') {
         i18n.changeLanguage(savedLang);
         setLanguageState(savedLang);
         return;

@@ -303,7 +303,7 @@ const WorkflowBuilderPage: React.FC = () => {
              </p>
              <div className="flex items-center gap-3">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[8px] font-black uppercase text-emerald-500">Execution Layer: Nominal</span>
+                <span className="text-[8px] font-black uppercase text-emerald-500">Execution Layer: Nameinal</span>
              </div>
           </div>
         </div>

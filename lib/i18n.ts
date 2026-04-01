@@ -71,7 +71,7 @@ const resources = {
         shiftDesc: "Optimization Node suggested for Vector-7",
         fusion: "Entity Fusion",
         fusionTitle: "New Client Node Verified",
-        fusionDesc: "Sentiment calibration: Nominal (84%)"
+        fusionDesc: "Sentiment calibration: Nameinal (84%)"
       },
       architecture: {
         tag: "UNY Architecture",
@@ -149,7 +149,7 @@ const resources = {
         privacy: "Privacy",
         security: "Security",
         build: "Authorized Build",
-        status: "Global Status: Nominal",
+        status: "Global Status: Nameinal",
         rights: "© 2026 UNY HUB • PROVISIONED BY LEON CHIKE",
         links: {
           product: "Product",
@@ -199,33 +199,6 @@ const resources = {
             desc: "How modern fiduciaries use AI to reduce invoice processing time by 80%."
           }
         ]
-      },
-      contact: {
-        tag: "Access Node",
-        title: "Request Your Audit",
-        desc: "Connect with our deployment specialists to evaluate your organization's cognitive infrastructure needs.",
-        why: {
-          title: "Why UNY OS?",
-          desc: "The only orchestration layer that guarantees absolute data sovereignty and cognitive alignment.",
-          items: [
-            "End-to-End Encryption",
-            "Sovereign Data Hosting",
-            "Cognitive Automation Layer",
-            "Enterprise-Grade Compliance"
-          ]
-        },
-        success: {
-          title: "Request Received",
-          desc: "Your audit request has been logged. A specialist will contact you within 24 hours.",
-          btn: "Back to Hub"
-        },
-        form: {
-          org: "Organization Name",
-          email: "Professional Email",
-          sector: "Industry Sector",
-          message: "Operational Requirements",
-          submit: "Authorize Audit Request"
-        }
       }
     }
   },
@@ -263,11 +236,11 @@ const resources = {
         web: "Application Web"
       },
       projectMgmt: {
-        tag: "Gestion de Projet",
+        tag: "Gestion de Project",
         title1: "Gardez chaque projet",
         title2: "sur la bonne voie",
         desc: "Planifiez, assignez et livrez votre travail - le tout au même endroit. Avec un suivi intelligent des tâches, des délais et des progrès en temps réel, vous restez organisé et vos clients restent confiants.",
-        btn: "Initialiser un Projet",
+        btn: "Initialiser un Project",
         items: ["Tâches", "Suivi du temps", "Feuilles de temps", "Rapports"]
       },
       financials: {
@@ -296,7 +269,7 @@ const resources = {
         shiftDesc: "Optimization Node suggested for Vector-7",
         fusion: "Entity Fusion",
         fusionTitle: "New Client Node Verified",
-        fusionDesc: "Sentiment calibration: Nominal (84%)"
+        fusionDesc: "Sentiment calibration: Nameinal (84%)"
       },
       architecture: {
         tag: "Architecture UNY",
@@ -327,39 +300,15 @@ const resources = {
         basic: {
           title: "Basic Node",
           desc: "Pour les structures en phase d'optimisation.",
-          items: ["Projets illimités", "Clients illimités", "Suivi du temps", "CRM", "Application iOS & Android"],
+          items: ["Projects illimités", "Clients illimités", "Suivi du temps", "CRM", "Application iOS & Android"],
           btn: "Demander l'Audit"
         },
         enterprise: {
           tag: "Recommandé",
           title: "Enterprise Matrix",
           desc: "Infrastructure professionnelle pour les entreprises en croissance.",
-          items: ["Tout dans Basic Node", "Factures & paiements", "Suivi des dépenses", "Suivi des revenus", "Planification avancée"],
+          items: ["Tout dans Basic Node", "Invoices & paiements", "Suivi des dépenses", "Suivi des revenus", "Planification avancée"],
           btn: "Demander l'Audit"
-        }
-      },
-      contact: {
-        tag: "Sovereignty Audit",
-        title: "Request Access",
-        desc: "L'accès à UNY Hub est sélectif. Remplissez ce formulaire pour demander votre audit de souveraineté et déverrouiller votre instance.",
-        why: {
-          title: "Pourquoi un audit ?",
-          desc: "UNY manipule des données critiques. Nous nous assurons que votre organisation est prête pour la souveraineté numérique avant l'onboarding.",
-          items: ["Conformité CNDP", "Optimisation du Moat Index", "Accompagnement Stratégique"]
-        },
-        success: {
-          title: "Demande Reçue",
-          desc: "Votre demande d'audit de souveraineté a été transmise à nos experts. Vous recevrez une réponse sous 24h.",
-          btn: "Envoyer une autre demande"
-        },
-        form: {
-          org: "Nom de l'organisation",
-          orgPlaceholder: "EX: ATLAS TECH",
-          email: "Email Professionnel",
-          emailPlaceholder: "ceo@atlas.tech",
-          size: "Taille de l'équipe",
-          industry: "Secteur d'activité",
-          btn: "Initialiser la Séquence d'Audit"
         }
       },
       footer: {
@@ -374,7 +323,7 @@ const resources = {
         privacy: "Confidentialité",
         security: "Sécurité",
         build: "Build Autorisé",
-        status: "Statut Global : Nominal",
+        status: "Status Global : Nameinal",
         rights: "© 2026 UNY HUB • PROVISIONED BY LEON CHIKE",
         links: {
           product: "Produit",
@@ -442,10 +391,10 @@ const resources = {
         success: {
           title: "Demande Reçue",
           desc: "Votre demande d'audit a été enregistrée. Un spécialiste vous contactera sous 24 heures.",
-          btn: "Retour au Hub"
+          btn: "Back au Hub"
         },
         form: {
-          org: "Nom de l'Organisation",
+          org: "Name de l'Organisation",
           email: "Email Professionnel",
           sector: "Secteur d'Activité",
           message: "Exigences Opérationnelles",

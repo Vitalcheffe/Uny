@@ -51,7 +51,7 @@ const AdminSidebar: React.FC = () => {
           onClick={handleSignOut}
           className="flex items-center gap-3 w-full px-4 py-3 text-slate-500 hover:text-rose-700 text-sm font-bold transition-colors rounded-lg hover:bg-rose-50"
         >
-          <LogOut size={18} /> Déconnexion
+          <LogOut size={18} /> Logout
         </button>
       </div>
     </aside>

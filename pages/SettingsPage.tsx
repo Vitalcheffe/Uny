@@ -42,7 +42,7 @@ const SettingsPage: React.FC = () => {
                  Configuration <span className="text-blue-600">Noyau</span>
                </h1>
                <p className="text-[10px] font-black uppercase tracking-[0.6em] text-slate-400 mt-2">
-                 Paramètres Système & Protocoles Logiques
+                 Settings Système & Protocoles Logiques
                </p>
             </div>
           </div>
@@ -86,7 +86,7 @@ const SettingsPage: React.FC = () => {
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                       <div className="space-y-4">
                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] ml-4">Désignation Sociale</label>
-                         <input type="text" defaultValue={profile?.metadata?.company_name} className="w-full px-8 py-6 rounded-[32px] bg-slate-50 border-2 border-slate-50 focus:border-blue-500/20 focus:bg-white outline-none transition-all font-black text-xl italic uppercase tracking-tight" />
+                         <input type="text" defaultValue={String(profile?.metadata?.company_name || '')} className="w-full px-8 py-6 rounded-[32px] bg-slate-50 border-2 border-slate-50 focus:border-blue-500/20 focus:bg-white outline-none transition-all font-black text-xl italic uppercase tracking-tight" />
                       </div>
                       <div className="space-y-4">
                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] ml-4">Identifiant Fiscal / ICE</label>

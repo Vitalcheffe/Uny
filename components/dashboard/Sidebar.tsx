@@ -172,7 +172,7 @@ const Sidebar: React.FC = () => {
                 onClick={handleSignOut}
                 className="flex items-center gap-3 w-full px-2 py-2 text-slate-500 hover:text-rose-700 text-xs font-bold uppercase tracking-widest transition-colors rounded-lg hover:bg-rose-50"
               >
-                <LogOut size={14} /> Déconnexion
+                <LogOut size={14} /> Logout
               </button>
            </div>
         </div>

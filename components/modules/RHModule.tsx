@@ -119,7 +119,7 @@ export const RHModule: React.FC = () => {
             <h4 className="text-[11px] font-black text-white uppercase tracking-[0.4em] mb-2">Sécurité des Données N4</h4>
             <p className="text-[9px] text-gray-600 uppercase font-bold leading-relaxed tracking-widest">
                Les attributs 'Salary' et 'Health' sont protégés par RLS au niveau du Kernel Supabase et par le protocole RBAC UNY. 
-               Aucune donnée sensible n'est transmise au client sans token JWT valide DIR_RH, SUPER_ADMIN ou OWNER.
+               No data sensible n'est transmise au client sans token JWT valide DIR_RH, SUPER_ADMIN ou OWNER.
             </p>
          </div>
       </div>

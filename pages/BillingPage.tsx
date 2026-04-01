@@ -194,7 +194,7 @@ const BillingPage: React.FC = () => {
             </header>
             <div className="space-y-6">
                <div className="flex justify-between items-end">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Crédits Consommés (Période)</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Credits Consumed (Period)</p>
                   <p className="text-2xl font-black italic tracking-tighter text-slate-900">{totalCreditsUsed.toLocaleString()} <span className="text-[10px] text-slate-400">UNY CREDITS</span></p>
                </div>
                <div className="h-2 w-full bg-slate-50 rounded-full overflow-hidden border border-slate-100">

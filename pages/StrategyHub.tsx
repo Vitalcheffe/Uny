@@ -141,7 +141,7 @@ const StrategyHub: React.FC = () => {
            <div className="space-y-4">
               <h2 className="text-4xl font-black italic uppercase tracking-tighter text-slate-900 leading-none">En attente d'ingestion</h2>
               <p className="text-sm font-bold text-slate-400 uppercase tracking-widest leading-relaxed max-w-xl mx-auto">
-                 Le hub stratégique nécessite des signaux financiers réels (Factures Payées) et des coûts opérationnels pour générer des trajectoires prédictives.
+                 Le hub stratégique nécessite des signaux financiers réels (Invoices Payées) et des coûts opérationnels pour générer des trajectoires prédictives.
               </p>
            </div>
            <button 

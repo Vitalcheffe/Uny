@@ -38,8 +38,7 @@ const GlobalAudit = lazy(() => import('./pages/admin/GlobalAudit'));
 const AdminAuditRequests = lazy(() => import('./pages/admin/AdminAuditRequests'));
 
 /**
- * SUPER ADMIN ROUTE PROTOCOL
- */const PIIMonitor = lazy(() => import('./components/admin/PIIMonitor'));
+ * Super Admin route guard.
  */
 function SuperAdminRoute({ children }: { children?: React.ReactNode }) {
   const { isSuperAdmin, isLoading, profileLoaded } = useAuth();

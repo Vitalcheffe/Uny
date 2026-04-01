@@ -130,7 +130,10 @@ const GlobalAudit: React.FC = () => {
       
       if (action === 'APPROVED') {
         // Trigger Spawning Logic
-        await organizationService.spawnOrganization(request);
+        await organizationService.spawnOrganization({
+          company_name: (request as any).company_name || (request as any).organization_name || '',
+          email: request.email,
+        });
         toast.success("Audit approuvé. Spawning de l'organisation terminé.");
       } else {
         toast.info("Audit refusé.");
@@ -138,7 +141,7 @@ const GlobalAudit: React.FC = () => {
       
       fetchRequests();
     } catch (err: any) {
-      toast.error("Erreur lors de l'action.");
+      toast.error("Error during l'action.");
     } finally {
       setLoading(false);
     }

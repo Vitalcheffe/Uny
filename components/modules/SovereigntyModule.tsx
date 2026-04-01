@@ -23,7 +23,7 @@ export const SovereigntyModule: React.FC = () => {
            </p>
            <div className="p-8 border border-white/5 bg-black/40 rounded-3xl space-y-6">
               <div className="flex justify-between text-[9px] font-black text-gray-500 uppercase tracking-widest">
-                 <span>Statut de Localisation</span>
+                 <span>Status de Localisation</span>
                  <span className="text-brand-emerald">CONFIRMÉ</span>
               </div>
               <div className="h-1 bg-white/5 rounded-full overflow-hidden">
@@ -61,7 +61,7 @@ export const SovereigntyModule: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
          {[
-           { icon: Server, label: "Nodes Physiques", value: "3/3 Actifs" },
+           { icon: Server, label: "Nodes Physiques", value: "3/3 Actives" },
            { icon: Database, label: "Data Residency", value: "Locked" },
            { icon: Lock, label: "Encryption HSM", value: "Hardware Level" }
          ].map((item, i) => (

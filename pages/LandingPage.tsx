@@ -261,7 +261,7 @@ const LandingPage: React.FC = () => {
       opacity: 1, 
       rotateX: 0,
       transition: { 
-        type: "spring",
+        type: "spring" as const,
         damping: 12,
         stiffness: 100,
         duration: 0.8
@@ -271,7 +271,7 @@ const LandingPage: React.FC = () => {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' as const } }
   };
 
   return (
@@ -414,7 +414,7 @@ const LandingPage: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-[11px] font-black uppercase tracking-[0.3em] leading-none text-zinc-500 mb-2">System Load</p>
-                    <p className="text-3xl font-black italic text-emerald-500">Nominal</p>
+                    <p className="text-3xl font-black italic text-emerald-500">Nameinal</p>
                   </div>
                 </div>
               </motion.div>
@@ -886,7 +886,7 @@ const LandingPage: React.FC = () => {
                    initial={{ opacity: 0, y: 30 }}
                    whileInView={{ opacity: 1, y: 0 }}
                    whileHover={{ y: -10, rotateX: 5, rotateY: -5 }}
-                   transition={{ delay: i * 0.1, type: "spring", stiffness: 300 }}
+                   transition={{ delay: i * 0.1, type: "spring" as const, stiffness: 300 }}
                    className={`group relative bg-white/[0.02] border border-white/5 p-10 rounded-[48px] hover:bg-white/[0.05] hover:border-blue-500/30 cursor-pointer overflow-hidden flex flex-col justify-end ${gridClasses} perspective-1000`}
                  >
                   <div className="absolute top-10 right-10 w-16 h-16 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-all shadow-xl group-hover:shadow-blue-500/20">

@@ -31,7 +31,7 @@ const StatusBadge = ({ status }: { status: string }) => {
     Draft: 'bg-slate-50 text-slate-500 border-slate-100',
     Overdue: 'bg-rose-50 text-rose-600 border-rose-100',
   };
-  const translatedStatus = status === 'Paid' ? 'Payé' : status === 'Sent' ? 'Envoyé' : status === 'Overdue' ? 'En retard' : 'Brouillon';
+  const translatedStatus = status;
   return (
     <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${styles[status] || styles.Draft}`}>
       {translatedStatus}
@@ -198,7 +198,7 @@ const InvoicesPage: React.FC = () => {
     e.preventDefault();
     if (!canWrite) return;
     if (!formData.project_id || !formData.amount) {
-      setError('Liaison projet et magnitude financière requises.');
+      setError('Project link and financial magnitude required.');
       return;
     }
 
@@ -255,7 +255,7 @@ const InvoicesPage: React.FC = () => {
             onClick={() => setShowModal(true)}
             className="bg-black text-white px-10 py-5 rounded-full font-black text-[10px] uppercase tracking-widest flex items-center gap-3 hover:bg-slate-800 shadow-xl transition-all italic shrink-0"
           >
-            <Plus size={16} /> + GÉNÉRER FACTURE
+            <Plus size={16} /> + GENERATE INVOICE
           </button>
         )}
       </div>
@@ -313,7 +313,7 @@ const InvoicesPage: React.FC = () => {
                 onClick={() => setShowModal(true)}
                 className="bg-blue-600 text-white px-10 py-5 rounded-full font-black text-[11px] uppercase tracking-widest shadow-lg hover:bg-blue-500 transition-all italic"
               >
-                + GÉNÉRER FACTURE
+                + GENERATE INVOICE
               </button>
             )}
           </div>
@@ -331,7 +331,7 @@ const InvoicesPage: React.FC = () => {
                    onClick={() => setShowModal(true)}
                    className="flex items-center gap-3 px-8 py-4 bg-black text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl"
                  >
-                   Générer une Transmission de Facture
+                   Générer une Transmission de Invoice
                  </button>
                )}
             </div>
@@ -349,7 +349,7 @@ const InvoicesPage: React.FC = () => {
                   <th className="px-10 py-6">Mission / Client</th>
                   <th className="px-10 py-6">ID Signal</th>
                   <th className="px-10 py-6 text-right">Volume</th>
-                  <th className="px-10 py-6">Statut</th>
+                  <th className="px-10 py-6">Status</th>
                   <th className="px-10 py-6">Date Limite</th>
                   <th className="px-10 py-6 text-right">Actions</th>
                 </tr>
@@ -372,7 +372,7 @@ const InvoicesPage: React.FC = () => {
                     <td className="px-10 py-8">
                       <div className="space-y-1">
                         <span className="text-lg italic uppercase tracking-tight block truncate max-w-xs">{inv.client_name}</span>
-                        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Nœud de Projet Lié</span>
+                        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Nœud de Project Lié</span>
                       </div>
                     </td>
                     <td className="px-10 py-8 font-mono text-[10px] text-slate-400">#INV-{inv.id?.slice(0, 8).toUpperCase() || '---'}</td>
@@ -451,7 +451,7 @@ const InvoicesPage: React.FC = () => {
                     onClick={handleBulkExport}
                     className="flex items-center gap-3 px-6 py-4 bg-white/5 hover:bg-white/10 rounded-2xl transition-all text-[10px] font-black uppercase tracking-widest border border-white/5"
                   >
-                    <Download size={16} /> Exporter CSV
+                    <Download size={16} /> Export CSV
                   </button>
                   <div className="h-10 w-px bg-white/10 mx-2" />
                   <button 

@@ -54,7 +54,7 @@ const KnowledgeHub: React.FC = () => {
                   IA Confidence: 98.4%
                 </div>
                 <h1 className="text-4xl font-[950] text-white italic uppercase tracking-tighter leading-tight">
-                  Analyse <br /> <span className="text-blue-600">Cognitive</span> Terminée
+                  Analyse <br /> <span className="text-blue-600">Cognitive</span> Completede
                 </h1>
               </div>
 
@@ -63,9 +63,9 @@ const KnowledgeHub: React.FC = () => {
                 {[
                   { label: "Fournisseur", name: "fournisseur" },
                   { label: "ICE (Identifiant Commun d'Entreprise)", name: "ice", secure: true },
-                  { label: "Montant HT", name: "montantHT" },
+                  { label: "Amount HT", name: "montantHT" },
                   { label: "TVA (20%)", name: "tva" },
-                  { label: "Montant TTC", name: "montantTTC" },
+                  { label: "Amount TTC", name: "montantTTC" },
                   { label: "Due Date", name: "dateEcheance", type: "date" },
                 ].map((field) => (
                   <div key={field.name} className="space-y-3">
@@ -97,7 +97,7 @@ const KnowledgeHub: React.FC = () => {
         {formData && (
           <div className="sticky bottom-0 bg-[#050505]/80 backdrop-blur-xl border-t border-white/5 p-8 flex justify-end gap-6">
             <button className="text-zinc-500 font-black uppercase tracking-widest text-[10px] px-8 py-4 hover:text-white transition-colors italic">
-              Rejeter / Modifier
+              Rejeter / Edit
             </button>
             <button className="bg-blue-600 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] hover:bg-blue-700 transition-all shadow-2xl shadow-blue-500/20 italic glow-button">
               Valider & Injecter

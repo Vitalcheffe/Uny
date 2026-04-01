@@ -107,7 +107,7 @@ const BusinessMemory: React.FC<BusinessMemoryProps> = ({ intel, realProjects = [
           connections: [],
           insight: 'Tactical background signal.',
           riskFactor: 0,
-          interceptionImpact: 'Nominal'
+          interceptionImpact: 'Nameinal'
         });
       }
     }

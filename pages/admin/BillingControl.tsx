@@ -54,7 +54,7 @@ const BillingControl: React.FC = () => {
       {
         loading: `Déclenchement du cycle pour ${orgName}...`,
         success: `Cycle de facturation forcé pour ${orgName}.`,
-        error: 'Échec du déclenchement.',
+        error: 'Failure du déclenchement.',
       }
     );
   };

@@ -60,7 +60,7 @@ const SourceModal: React.FC<SourceModalProps> = ({ atom, isOpen, onClose }) => {
                       <div className="flex items-center justify-between mb-4">
                          <p className="text-[9px] font-black uppercase text-slate-400 italic leading-none tracking-widest">Trace Documentaire</p>
                          <button className="text-[9px] font-black uppercase text-blue-600 hover:underline flex items-center gap-1">
-                            Ouvrir l'Archive <ExternalLink size={10} />
+                            Open l'Archive <ExternalLink size={10} />
                          </button>
                       </div>
                       <p className="text-sm font-bold leading-relaxed text-slate-600 italic uppercase tracking-tighter">
@@ -73,7 +73,7 @@ const SourceModal: React.FC<SourceModalProps> = ({ atom, isOpen, onClose }) => {
                    <div className="p-6 bg-emerald-50 rounded-3xl border border-emerald-100 flex items-center gap-4">
                       <ShieldCheck size={20} className="text-emerald-600" />
                       <div>
-                        <p className="text-[10px] font-black uppercase text-emerald-600 leading-none tracking-widest italic">Statut d'Autorisation</p>
+                        <p className="text-[10px] font-black uppercase text-emerald-600 leading-none tracking-widest italic">Status d'Autorisation</p>
                         <p className="text-xs font-bold text-emerald-900/60 uppercase tracking-tight italic mt-1">
                           {atom.validation_status === 'approved' ? 'Fait vérifié et validé dans la matrice.' : 'En attente d\'autorisation du commandant.'}
                         </p>
@@ -85,7 +85,7 @@ const SourceModal: React.FC<SourceModalProps> = ({ atom, isOpen, onClose }) => {
                   onClick={onClose}
                   className="w-full py-6 bg-black text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl hover:bg-blue-600 transition-all italic active:scale-95"
                 >
-                  Fermer l'Aperçu
+                  Close l'Aperçu
                 </button>
              </div>
           </motion.div>

@@ -74,7 +74,7 @@ const ProjectCard: React.FC<{ project: Project, onClick: () => void }> = ({ proj
       <div className="mb-4 space-y-2">
         <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-slate-400">
           <span>Déploiement</span>
-          <span>{project.status === 'DEPLOYED' ? '100%' : 'Actif'}</span>
+          <span>{project.status === 'DEPLOYED' ? '100%' : 'Active'}</span>
         </div>
         <div className="h-1.5 bg-slate-50 rounded-full overflow-hidden border border-slate-100">
           <motion.div 
@@ -349,7 +349,7 @@ const ProjectsPage: React.FC = () => {
                         <th className="px-12 py-8">Nœud de Mission</th>
                         <th className="px-12 py-8">Client Ancrage</th>
                         <th className="px-12 py-8">Priorité</th>
-                        <th className="px-12 py-8">Statut</th>
+                        <th className="px-12 py-8">Status</th>
                         <th className="px-12 py-8 text-right">Revenus</th>
                       </tr>
                     </thead>
@@ -428,7 +428,7 @@ const ProjectsPage: React.FC = () => {
                           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-8">
                              <div className="flex items-baseline gap-4">
                                 <span className="text-[80px] font-[950] italic tracking-tighter leading-none text-blue-500">{aiForecast.completion_probability}%</span>
-                                <span className="text-xs font-black uppercase tracking-widest text-slate-500 leading-none">Probabilité <br /> de Succès</span>
+                                <span className="text-xs font-black uppercase tracking-widest text-slate-500 leading-none">Probabilité <br /> de Success</span>
                              </div>
                              
                              <div className="space-y-4">

@@ -39,7 +39,7 @@ const CreateOrganization: React.FC<CreateOrganizationProps> = ({ onSuccess }) =>
         }
       });
       
-      // 2. Create Admin Profile Placeholder
+      // 2. Create Admin Profilee Placeholder
       await firestoreService.addDocumentGlobal('profiles', {
         organization_id: orgId,
         email: formData.email,
@@ -101,7 +101,7 @@ const CreateOrganization: React.FC<CreateOrganizationProps> = ({ onSuccess }) =>
                 <form onSubmit={handleSubmit} className="space-y-8">
                   <div className="space-y-6">
                     <div className="space-y-3">
-                      <label className="text-sm font-semibold text-slate-700 ml-1">Nom de l'Organisation</label>
+                      <label className="text-sm font-semibold text-slate-700 ml-1">Name de l'Organisation</label>
                       <div className="relative">
                         <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                         <input 

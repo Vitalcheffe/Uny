@@ -47,7 +47,13 @@ export class NeuralExtractor {
       
       // 2.5 Secure Proxy: Mask PII before sending to the main extraction model
       console.log('🛡️ [SecureProxy] Anonymizing payload via NER Engine...');
-      const anonymizedText = await NEREngine.maskPII(rawText);
+      const apiKey = process.env.GEMINI_API_KEY || '';
+      let anonymizedText = rawText;
+      if (apiKey) {
+        const nerEngine = new NEREngine(apiKey);
+        const result = await nerEngine.anonymize(rawText);
+        anonymizedText = result.anonymized;
+      }
       
       const extraction = await this.extractKnowledge(anonymizedText, documentType);
       
