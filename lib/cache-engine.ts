@@ -1,6 +1,6 @@
 /**
  * ⚡ UNY PROTOCOL: CACHE ENGINE (V1)
- * Description: Couche de cache local utilisant IndexedDB pour la navigation instantanée.
+ * Description: Local cache layer using IndexedDB for instant navigation.
  * Optimisé pour les connexions instables (Africa-Ready).
  */
 

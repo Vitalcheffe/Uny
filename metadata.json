@@ -1,8 +1,15 @@
 {
-  "name": "Remix: UNY - Professional Freelance Management",
-  "description": "An all-in-one platform for freelancers to manage clients, projects, and payments without the chaos. From first contract to final invoice, UNY has your back.",
-  "requestFramePermissions": [
-    "camera",
-    "microphone"
+  "name": "UNY - Sovereign Operating System",
+  "description": "Enterprise OS for African businesses with AI-powered data sovereignty and compliance (Loi 09-08, RGPD).",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": "https://github.com/Vitalcheffe/Uny",
+  "tech": ["React 18", "TypeScript", "Vite", "Supabase", "Tailwind CSS 4"],
+  "features": [
+    "Multi-tenant SaaS architecture",
+    "Secure AI Proxy with PII anonymization",
+    "NER Engine (Gemini AI + regex fallback)",
+    "Paddle payment integration",
+    "Moroccan data sovereignty compliance"
   ]
 }

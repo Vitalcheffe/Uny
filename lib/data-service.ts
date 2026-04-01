@@ -1,7 +1,7 @@
 /**
  * ⚡ UNY PROTOCOL: DATA SERVICE (V1)
- * Description: Interface de vérité pour toutes les opérations CRUD Supabase.
- * Zéro Firebase, Typage strict, Gestion des timestamps.
+ * Description: Unified CRUD interface for all Supabase operations.
+ * Zero Firebase, Typage strict, Gestion des timestamps.
  */
 
 import { supabase } from './supabase-client';
@@ -9,7 +9,7 @@ import { UnyUser, UserRole } from '../types/auth';
 import { toast } from 'sonner';
 
 /**
- * Interface pour les organisations
+ * Interface for organizations
  */
 export interface Organization {
   id: string;
@@ -21,7 +21,7 @@ export interface Organization {
 }
 
 /**
- * Interface pour les documents
+ * Interface for documents
  */
 export interface UnyDocument {
   id: string;
@@ -38,11 +38,11 @@ export interface UnyDocument {
 }
 
 /**
- * Classe DataService pour centraliser les appels Supabase
+ * DataService class for centralized Supabase calls
  */
 export class DataService {
   /**
-   * Récupère les données d'une organisation par son ID
+   * Retrieve organization data by ID
    */
   static async getOrganization(id: string): Promise<Organization | null> {
     try {
@@ -62,21 +62,21 @@ export class DataService {
   }
 
   /**
-   * Upload d'un document vers Supabase Storage + Enregistrement en DB
+   * Upload document to Supabase Storage + Save metadata to DB
    */
   static async uploadDocument(file: File, orgId: string): Promise<UnyDocument | null> {
     const fileName = `${Date.now()}_${file.name}`;
     const storagePath = `orgs/${orgId}/docs/${fileName}`;
 
     try {
-      // 1. Upload vers le bucket 'documents'
+      // 1. Upload to bucket 'documents'
       const { data: storageData, error: storageError } = await supabase.storage
         .from('documents')
         .upload(storagePath, file);
 
       if (storageError) throw storageError;
 
-      // 2. Enregistrement des métadonnées en DB
+      // 2. Save file metadata to database
       const { data: docData, error: dbError } = await (supabase as any)
         .from('documents')
         .insert({
@@ -105,7 +105,7 @@ export class DataService {
   }
 
   /**
-   * Log d'activité dans l'Audit Ledger
+   * Log activity to Audit Ledger
    */
   static async logActivity(action: string, target: string, metadata: Record<string, any> = {}): Promise<void> {
     try {
@@ -123,13 +123,13 @@ export class DataService {
 
       if (error) throw error;
     } catch (error: any) {
-      // On ne bloque pas l'utilisateur pour un log d'audit qui échoue, mais on log l'erreur
+      // Do not block user for failed audit log, mais on log l'erreur
       console.error(`❌ [DataService] logActivity fault: ${error.message}`);
     }
   }
 
   /**
-   * Soft delete d'un document
+   * Soft delete document
    */
   static async deleteDocument(id: string): Promise<boolean> {
     try {
@@ -149,7 +149,7 @@ export class DataService {
   }
 
   /**
-   * Crée une nouvelle demande d'audit (Formulaire public)
+   * Create new audit request (Formulaire public)
    */
   static async createAuditRequest(payload: {
     company_name: string;
@@ -167,7 +167,7 @@ export class DataService {
         .from('audit_requests')
         .insert({
           company_name: payload.company_name,
-          organization_name: payload.company_name, // Fallback pour satisfaire la contrainte NOT NULL
+          organization_name: payload.company_name, // Fallback for NOT NULL constraint
           email: payload.email,
           team_size: payload.team_size,
           industry: payload.industry,

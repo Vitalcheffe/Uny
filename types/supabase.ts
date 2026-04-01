@@ -1,6 +1,6 @@
 /**
  * ⚡ UNY PROTOCOL: SUPABASE DATABASE TYPES (V1)
- * Description: Définitions des types de la base de données Supabase.
+ * Description: Supabase database type definitions.
  */
 
 export type Json =

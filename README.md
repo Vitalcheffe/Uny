@@ -1,171 +1,103 @@
-# 🏢 UNY - Sovereign Operating System for African Businesses
+# UNY
 
-> **L'OS intelligent qui permet aux entreprises africaines d'utiliser l'IA mondiale (ChatGPT, Claude, Gemini) tout en gardant leurs données souveraines.**
+<p align="center">
+  <strong>Sovereign Operating System for African Businesses</strong>
+</p>
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18.0-61dafb)](https://reactjs.org/)
-[![Supabase](https://img.shields.io/badge/Supabase-Postgres-green)](https://supabase.com/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+<p align="center">
+  <a href="https://github.com/Vitalcheffe/Uny/actions"><img src="https://img.shields.io/github/actions/workflow/status/Vitalcheffe/Uny/ci.yml?branch=main&style=for-the-badge" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT"></a>
+  <a href="https://github.com/Vitalcheffe/Uny"><img src="https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript" alt="TypeScript"></a>
+  <a href="https://supabase.com"><img src="https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase"></a>
+</p>
 
----
+UNY lets African businesses use global AI (ChatGPT, Claude, Gemini) while keeping their data sovereign. All sensitive data is anonymized before leaving the server. Loi 09-08 and RGPD compliant by design.
 
-## 🎯 Vision
+## What it does
 
-UNY résout le paradoxe de l'IA en Afrique :
-- ✅ Les entreprises VEULENT l'IA (productivité +40%)
-- ❌ Les lois BLOQUENT l'utilisation (Loi 09-08, RGPD)
-- ✅ UNY = Le pont légal entre les deux
+- **Secure AI Proxy** — PII detection and anonymization (Moroccan CIN, ICE, phones, emails) before any data hits an external LLM
+- **Multi-tenant OS** — CRM, Projects (Kanban + Gantt), Documents (OCR), Invoices, Treasury, Team management
+- **NER Engine** — Dual-mode: Gemini AI for accuracy, regex fallback for reliability
+- **Data sovereignty** — Your data stays on your infrastructure. Only anonymized text reaches external APIs
 
-**Notre solution : Secure Proxy + Multi-Tenant OS**
+## Tech
 
----
+| Layer | Stack |
+|-------|-------|
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS 4 |
+| Backend | Express 5, Node.js 20 |
+| Database | Supabase (PostgreSQL + Auth + RLS) |
+| AI | Gemini 2.0, OpenAI GPT-4, Claude 3 Opus (fallback) |
+| Payments | Paddle, Stripe |
+| i18n | Auto-detect via IP (FR/EN), react-i18next |
 
-## 🚀 Features
+## Quick start
 
-### 🔐 Secure AI Proxy
-- **Anonymisation automatique** des données sensibles (CIN, ICE, emails, téléphones)
-- **NER Engine** multilingue (Français, Arabe, Darija)
-- **Zero-knowledge architecture** : données sensibles ne quittent jamais le serveur local
-- **Audit trail** complet pour conformité CNDP/DGSSI
-
-### 🏢 Multi-Tenant OS
-- **CRM** : Gestion clients avec AI sentiment analysis
-- **Projects** : Kanban + Gantt + AI forecasting
-- **Documents** : OCR + extraction automatique (Knowledge Atoms)
-- **Invoices** : Facturation auto + payment prediction
-- **Treasury** : Cash flow + forecast 90 jours
-- **Team** : Org chart 3D + performance tracking
-
-### 👑 Super Admin
-- **Audit Pipeline** : Validation entreprises (Landing → Onboarding automatique)
-- **Multi-Org Control** : Suspend/Activate organizations
-- **Quota Management** : Limites IA + Storage par entreprise
-- **Billing Dashboard** : MRR tracking (Paddle integration)
-
----
-
-## 🛠️ Tech Stack
-
-**Frontend:**
-- Next.js 14 (App Router)
-- TypeScript 5
-- Tailwind CSS + shadcn/ui
-- React Three Fiber (3D visualizations)
-- Framer Motion (animations)
-
-**Backend:**
-- Node.js 20 (Express server)
-- Supabase (PostgreSQL 15 + Auth + Storage + Realtime)
-- Python 3.11 (NER Engine via FastAPI)
-
-**AI/ML:**
-- Gemini 2.0 Flash (NER + document analysis)
-- OpenAI GPT-4 (fallback)
-- Claude 3 Opus (fallback)
-
-**Payments:**
-- Paddle (subscription management)
-
-**Infrastructure:**
-- Vercel (Frontend hosting)
-- Railway (Backend API)
-- Supabase Cloud (Database + Auth)
-
----
-
-## 📦 Installation
-
-### Prerequisites
-- Node.js 18+
-- npm or pnpm
-- Supabase account
-- Paddle account (for payments)
-- Gemini API key
-
-### Setup
-
-1. **Clone the repository**
 ```bash
-git clone https://github.com/VitalCheffe/Uny.git
+git clone https://github.com/Vitalcheffe/Uny.git
 cd Uny
-```
-
-2. **Install dependencies**
-```bash
 npm install
-```
-
-3. **Configure environment variables**
-```bash
-cp .env.example .env.local
-# Edit .env.local with your actual keys
-```
-
-4. **Run database migrations**
-```bash
-npx supabase db push
-```
-
-5. **Start development server**
-```bash
+cp .env.example .env
+# Fill in your keys in .env
 npm run dev
 ```
 
-6. **Start backend server (separate terminal)**
-```bash
-npm run server
+Visit http://localhost:3000
+
+## Project structure
+
+```
+├── components/          # UI components
+│   ├── admin/           # Admin panel components
+│   ├── dashboard/       # Dashboard widgets
+│   ├── ai/              # AI assistant components
+│   └── marketing/       # Landing page
+├── pages/               # Route pages
+├── layouts/             # Layout wrappers
+├── lib/                 # Core services
+│   ├── supabase-client.ts   # Supabase init
+│   ├── ner-engine.ts        # PII detection
+│   ├── paddle-service.ts    # Payments
+│   ├── email-service.ts     # Transactional email
+│   └── pii-masker.ts        # Client-side masking
+├── services/            # Business logic
+├── context/             # React contexts
+├── types/               # TypeScript types
+├── supabase/migrations/ # DB migrations
+├── tests/               # Test files
+└── server.ts            # Express API
 ```
 
-Visit http://localhost:5173
-
-## 🗄️ Database Schema
-Key tables:
-- `organizations` - Multi-tenant orgs
-- `profiles` - User accounts with RLS
-- `documents` - File storage with AI metadata
-- `knowledge_atoms` - Extracted data points
-- `audit_requests` - Landing page submissions
-- `invitations` - Onboarding tokens
-See `supabase/migrations/` for full schema.
-
-## 🔐 Security
-- Row Level Security (RLS) on all tables
-- Multi-tenant isolation via `org_id` policies
-- Encrypted secrets (AES-256 for token mappings)
-- Audit logging (immutable blockchain-style)
-- CORS protection on API routes
-- Rate limiting (100 req/min per IP)
-
-## 🧪 Testing
+## Scripts
 
 ```bash
-# Run all tests
-npm test
-
-# Run with coverage
-npm run test:coverage
-
-# E2E tests
-npm run test:e2e
+npm run dev         # Start Vite dev server
+npm run server      # Start Express backend
+npm run build       # Production build
+npm test            # Run tests
+npm run lint        # ESLint
 ```
 
-## 📚 Documentation
-- [Architecture Overview](docs/ARCHITECTURE.md)
-- API Reference
-- Deployment Guide
-- Contributing
+## Environment variables
 
-## 🤝 Contributing
-We welcome contributions! See `CONTRIBUTING.md` for guidelines.
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_SUPABASE_URL` | Yes | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Yes | Supabase anon key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server | Service role key (server-side only) |
+| `GEMINI_API_KEY` | Server | Gemini API key for NER engine |
+| `PADDLE_API_KEY` | Server | Paddle API key |
+| `VITE_PADDLE_CLIENT_TOKEN` | Yes | Paddle client token |
+| `PADDLE_WEBHOOK_SECRET` | Server | Paddle webhook secret |
 
-## 📄 License
-MIT License - see LICENSE file for details.
+## Testing
 
-## 🙏 Acknowledgments
-- Built with ❤️ in Casablanca, Morocco
-- Powered by Supabase, Vercel, and Google AI
+```bash
+npm test              # Run all tests
+npx vitest run        # Same
+npx vitest --coverage # With coverage
+```
 
-## 📞 Contact
-- Email: contact@uny.ma
-- GitHub: @VitalCheffe
-- Twitter: @UNY_OS
+## License
+
+[MIT](LICENSE)

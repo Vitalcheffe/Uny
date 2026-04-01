@@ -1,6 +1,6 @@
 /**
  * ⚡ UNY PROTOCOL: CORE SUPABASE CLIENT (V1)
- * Description: Initialisation sécurisée du client Supabase avec validation stricte.
+ * Description: Secure Supabase client initialization with strict validation.
  * Zero fallback credentials, zero silent failures.
  */
 

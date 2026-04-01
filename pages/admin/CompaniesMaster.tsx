@@ -50,7 +50,7 @@ const CompaniesMaster: React.FC = () => {
   const fetchOrgs = async () => {
     try {
       setLoading(true);
-      // Récupération des orgs + count des profils (employés)
+      // Fetch orgs + profile count (employees)
       const { data, error } = await supabase
         .from('organizations')
         .select(`

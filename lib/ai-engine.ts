@@ -1,6 +1,6 @@
 /**
  * ⚡ UNY PROTOCOL: AI ENGINE (V1)
- * Description: Moteur d'IA souverain avec masquage PII intégré.
+ * Description: Sovereign AI engine with integrated PII masking.
  * Intègre Anthropic/Gemini avec une couche de sécurité Zéro-Trace.
  */
 

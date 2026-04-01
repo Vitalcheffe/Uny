@@ -1,7 +1,7 @@
 /**
  * ⚡ UNY PROTOCOL: AUTH CONTEXT (V1)
- * Description: Gestionnaire d'authentification souverain basé sur Supabase Custom Claims.
- * Zéro hardcoding, Zéro Firebase, Zéro type 'any'.
+ * Description: Sovereign authentication manager based on Supabase Custom Claims.
+ * Zéro hardcoding, Zero Firebase, Zéro type 'any'.
  */
 
 import { createContext, useContext, useEffect, useState, ReactNode, useCallback, useMemo } from 'react';
@@ -18,8 +18,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   /**
-   * Mappe l'utilisateur Supabase vers l'interface UnyUser
-   * Extrait le rôle depuis les app_metadata du JWT (Custom Claims)
+   * Map Supabase user to UnyUser interface
+   * Extract role from JWT app_metadata (Custom Claims)
    */
   const mapSupabaseUser = useCallback((sbUser: User | null): UnyUser | null => {
     if (!sbUser) return null;
@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   /**
-   * Rafraîchit l'état de l'utilisateur actuel
+   * Refresh current user state
    */
   const refreshUser = useCallback(async () => {
     try {
@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [mapSupabaseUser]);
 
   /**
-   * Initialisation de la session et écoute des changements d'état
+   * Session initialization et écoute des changements d'état
    */
   useEffect(() => {
     const initSession = async () => {
@@ -65,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(mapSupabaseUser(currentSession?.user || null));
       } catch (error) {
         console.error('🛡️ [Kernel] Session init fault:', error);
-        toast.error('Erreur de connexion au noyau de sécurité.');
+        toast.error('Security kernel connection error.');
       } finally {
         setIsLoading(false);
       }
@@ -80,9 +80,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
 
       if (event === 'SIGNED_IN') {
-        toast.success('Connexion sécurisée établie.');
+        toast.success('Secure connection established.');
       } else if (event === 'SIGNED_OUT') {
-        toast.info('Session terminée.');
+        toast.info('Session ended.');
       }
     });
 
@@ -90,7 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [mapSupabaseUser]);
 
   /**
-   * Authentification par mot de passe
+   * Password authentication
    */
   const signIn = async (email: string, password: string) => {
     setIsLoading(true);
@@ -98,7 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
     } catch (error: any) {
-      toast.error(`Échec d'authentification: ${error.message}`);
+      toast.error(`Authentication failed: ${error.message}`);
       throw error;
     } finally {
       setIsLoading(false);
@@ -106,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   /**
-   * Déconnexion totale
+   * Full logout
    */
   const signOut = async () => {
     setIsLoading(true);
@@ -114,14 +114,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
     } catch (error: any) {
-      toast.error(`Erreur de déconnexion: ${error.message}`);
+      toast.error(`Logout error: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
   };
 
   /**
-   * Vérification simplifiée des permissions basée sur le rôle
+   * Simplified permission check basée sur le rôle
    * Sera affinée dans les phases suivantes
    */
   const hasPermission = useCallback((module: string, action: string = 'read'): boolean => {
@@ -129,7 +129,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (user.role === UserRole.SUPER_ADMIN) return true;
     if (user.role === UserRole.ORG_ADMIN) return true;
     
-    // Logique par défaut pour les autres rôles
+    // Default logic for other roles
     if (action === 'read') return true;
     return user.role === UserRole.MANAGER;
   }, [user]);
@@ -160,7 +160,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 }
 
 /**
- * Hook personnalisé pour accéder au contexte d'authentification
+ * Custom hook for authentication context
  */
 export const useAuth = () => {
   const context = useContext(AuthContext);
