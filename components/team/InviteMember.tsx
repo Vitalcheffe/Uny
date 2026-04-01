@@ -10,21 +10,21 @@ const motion = _motion as any;
 
 // Fix: Added missing roles to ROLE_DATA to match UserRole definition and resolve exhaustiveness error
 const ROLE_DATA: Record<UserRole, { title: string, desc: string, color: string }> = {
-  OWNER: { title: 'Propriétaire', desc: 'Contrôle total. Accès API, facturation et suppression de l\'organisation.', color: 'text-rose-600' },
-  SUPER_ADMIN: { title: 'Super Admin', desc: 'Orchestration d\'entreprise. Supervision inter-unités et accès infrastructure.', color: 'text-rose-700' },
-  ADMIN: { title: 'Admin', desc: 'Opérations complètes. Ne peut pas supprimer l\'organisation ou changer de forfait.', color: 'text-rose-500' },
-  MANAGER: { title: 'Manager', desc: 'Gestion d\'équipe. Supervision des projets et des membres de l\'équipe.', color: 'text-indigo-500' },
-  EMPLOYEE: { title: 'Employé', desc: 'Member standard. Accès aux outils de base et aux projets assignés.', color: 'text-slate-500' },
-  FINANCE_CONTROLLER: { title: 'Contrôleur Financier', desc: 'Focus Comptabilité & Trésorerie. Accès au rapprochement bancaire.', color: 'text-emerald-600' },
-  DIR_RH: { title: 'Directeur RH', desc: 'Contrôle stratégique du capital humain. Accès complet au coffre-fort et à la conformité.', color: 'text-blue-700' },
-  HR_MANAGER: { title: 'Manager RH', desc: 'Accès au coffre-fort des employés. Paie, contrats et données de santé.', color: 'text-blue-600' },
-  OPS_MANAGER: { title: 'Manager des Opérations', desc: 'Maître du flux de projet. Contrôle complet des missions et documents.', color: 'text-indigo-600' },
-  LEGAL_COUNSEL: { title: 'Conseiller Juridique', desc: 'Focus Souveraineté. Examen des documents et contrats avec accès aux risques Sentinel.', color: 'text-purple-600' },
-  CONTRIBUTOR: { title: 'Contributeur', desc: 'Saisie uniquement. Télécharge des documents et consulte les projets assignés.', color: 'text-slate-600' },
-  AUDITOR: { title: 'Auditeur', desc: 'Visibilité en lecture seule. Examen stratégique sans pouvoir de modification.', color: 'text-slate-500' },
-  GUEST: { title: 'Invité', desc: 'Partenaire restreint. Accès à des dossiers spécifiques uniquement.', color: 'text-slate-400' },
-  OPERATIVE: { title: 'Opérationnel', desc: 'Unité standard. Intégré via IA ou saisie manuelle.', color: 'text-slate-600' },
-  CLIENT_VIP: { title: 'Client VIP', desc: 'Accès externe premium. Consulte les projets et les nœuds financiers partagés.', color: 'text-amber-600' },
+  OWNER: { title: 'Owner', desc: 'Total control. Accès API, facturation et suppression de l\'organisation.', color: 'text-rose-600' },
+  SUPER_ADMIN: { title: 'Super Admin', desc: 'Orchestration d\'entreprise. Inter-unit supervision et accès infrastructure.', color: 'text-rose-700' },
+  ADMIN: { title: 'Admin', desc: 'Full operations. Ne peut pas supprimer l\'organisation ou changer de forfait.', color: 'text-rose-500' },
+  MANAGER: { title: 'Manager', desc: 'Gestion d\'équipe. Project supervision et des membres de l\'équipe.', color: 'text-indigo-500' },
+  EMPLOYEE: { title: 'Employé', desc: 'Standard member. Access to basic tools et aux projets assignés.', color: 'text-slate-500' },
+  FINANCE_CONTROLLER: { title: 'Financial Controller', desc: 'Accounting Focus & Trésorerie. Bank reconciliation access.', color: 'text-emerald-600' },
+  DIR_RH: { title: 'HR Director', desc: 'Strategic human capital control. Full vault access et à la conformité.', color: 'text-blue-700' },
+  HR_MANAGER: { title: 'HR Manager', desc: 'Employee vault access. Payroll, contracts and health data.', color: 'text-blue-600' },
+  OPS_MANAGER: { title: 'Operations Manager', desc: 'Project flow master. Full mission control et documents.', color: 'text-indigo-600' },
+  LEGAL_COUNSEL: { title: 'Legal Counsel', desc: 'Sovereignty Focus. Document review et contrats avec accès aux risques Sentinel.', color: 'text-purple-600' },
+  CONTRIBUTOR: { title: 'Contributor', desc: 'Input only. Uploads documents et consulte les projets assignés.', color: 'text-slate-600' },
+  AUDITOR: { title: 'Auditor', desc: 'Read-only visibility. Strategic review sans pouvoir de modification.', color: 'text-slate-500' },
+  GUEST: { title: 'Guest', desc: 'Restricted partner. Access to specific files only.', color: 'text-slate-400' },
+  OPERATIVE: { title: 'Operative', desc: 'Unité standard. Integrated via AI or manual input.', color: 'text-slate-600' },
+  CLIENT_VIP: { title: 'VIP Client', desc: 'Premium external access. Views projects et les shared financial nodes.', color: 'text-amber-600' },
 };
 
 const InviteMember: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, onClose }) => {
@@ -122,14 +122,14 @@ const InviteMember: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOp
               <div className="p-6 bg-slate-50 rounded-[32px] border border-slate-100 flex items-center gap-4">
                  <Shield size={20} className="text-slate-400" />
                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-relaxed italic">
-                   Le protocole de poignée de main cryptée sera envoyé au destinataire via le noyau UNY.
+                   The encrypted handshake protocol will be sent to the recipient via the UNY kernel.
                  </p>
               </div>
             </div>
 
             {/* Right: Role Matrix */}
             <div className="flex-1 bg-slate-50 rounded-[48px] p-10 flex flex-col">
-               <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8">Calibration du Niveau d'Accès</h3>
+               <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8">Access Level Calibration</h3>
                
                <div className="flex-1 space-y-2 overflow-y-auto no-scrollbar pr-2">
                   {(Object.entries(ROLE_DATA) as [UserRole, any][]).map(([key, data]) => (

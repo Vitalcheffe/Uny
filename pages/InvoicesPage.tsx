@@ -392,10 +392,10 @@ const InvoicesPage: React.FC = () => {
                           'bg-slate-50 text-slate-400 border-slate-200'
                         }`}
                       >
-                        <option value="Draft">Brouillon</option>
-                        <option value="Sent">Envoyé</option>
-                        <option value="Paid">Payé</option>
-                        <option value="Overdue">En retard</option>
+                        <option value="Draft">Draft</option>
+                        <option value="Sent">Sent</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Overdue">Overdue</option>
                       </select>
                     </td>
                     <td className="px-10 py-8">
@@ -445,7 +445,7 @@ const InvoicesPage: React.FC = () => {
                     onClick={handleBulkMarkAsPaid}
                     className="flex items-center gap-3 px-6 py-4 bg-emerald-600 hover:bg-emerald-500 rounded-2xl transition-all shadow-xl text-[10px] font-black uppercase tracking-widest"
                   >
-                    <CheckCircle2 size={16} /> Marquer Payé
+                    <CheckCircle2 size={16} /> Marquer Paid
                   </button>
                   <button 
                     onClick={handleBulkExport}
@@ -558,7 +558,7 @@ const InvoicesPage: React.FC = () => {
                           : 'bg-slate-50 text-slate-400 border-slate-100 hover:border-slate-300'
                         }`}
                       >
-                        {s === 'Draft' ? 'Brouillon' : s === 'Sent' ? 'Envoyé' : s === 'Paid' ? 'Payé' : 'En retard'}
+                        {s === 'Draft' ? 'Draft' : s === 'Sent' ? 'Sent' : s === 'Paid' ? 'Paid' : 'Overdue'}
                       </button>
                     ))}
                   </div>

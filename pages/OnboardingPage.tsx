@@ -286,7 +286,7 @@ const OnboardingPage: React.FC = () => {
                       </select>
                     </div>
                     <div className="space-y-3">
-                      <label className="text-sm font-semibold text-slate-700">Devise par Défaut</label>
+                      <label className="text-sm font-semibold text-slate-700">Currency par Défaut</label>
                       <select 
                         value={formData.currency}
                         onChange={(e) => setFormData({...formData, currency: e.target.value})}

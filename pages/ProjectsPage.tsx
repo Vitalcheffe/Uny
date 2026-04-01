@@ -348,7 +348,7 @@ const ProjectsPage: React.FC = () => {
                       <tr>
                         <th className="px-12 py-8">Nœud de Mission</th>
                         <th className="px-12 py-8">Client Ancrage</th>
-                        <th className="px-12 py-8">Priorité</th>
+                        <th className="px-12 py-8">Priority</th>
                         <th className="px-12 py-8">Status</th>
                         <th className="px-12 py-8 text-right">Revenus</th>
                       </tr>

@@ -1,7 +1,7 @@
 /**
  * ⚡ UNY PROTOCOL: AI ENGINE (V1)
  * Description: Sovereign AI engine with integrated PII masking.
- * Intègre Anthropic/Gemini avec une couche de sécurité Zéro-Trace.
+ * Integrates Anthropic/Gemini with a security layer Zero-Trace.
  */
 
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
@@ -10,7 +10,7 @@ import { supabase } from "./supabase-client";
 import { toast } from "sonner";
 
 /**
- * Interface pour les options de génération
+ * Interface for generation options
  */
 export interface AIEngineOptions {
   model?: string;
@@ -27,10 +27,10 @@ export class AIEngine {
   private static readonly API_KEY = process.env.GEMINI_API_KEY;
 
   /**
-   * Génère une réponse à partir d'un prompt, avec masquage PII automatique
+   * Generate a response from a prompt, with automatic PII masking
    * @param prompt Le texte brut de l'utilisateur
-   * @param options Options de configuration du modèle
-   * @returns La réponse de l'IA avec les données réelles réinjectées
+   * @param options Model configuration options
+   * @returns The AI response with real data re-injected
    */
   static async generateResponse(prompt: string, options: AIEngineOptions = {}): Promise<string | null> {
     if (!this.API_KEY) {
@@ -41,30 +41,30 @@ export class AIEngine {
     }
 
     try {
-      // 1. Masquage des données sensibles (PII)
+      // 1. Sensitive data masking (PII)
       const { maskedText, mapping } = PIIMasker.mask(prompt);
       const isMasked = mapping.size > 0;
 
-      // 2. Logging de la requête (Zéro-Trace: Hash uniquement)
+      // 2. Request logging (Zero-Trace: Hash uniquement)
       const requestHash = await this.hashString(prompt);
       await this.logAIRequest(requestHash, isMasked);
 
       // 3. Initialisation du client GenAI
       const ai = new GoogleGenAI({ apiKey: this.API_KEY });
       
-      // 4. Appel au modèle avec le texte anonymisé
+      // 4. Call model with anonymized text
       const response: GenerateContentResponse = await ai.models.generateContent({
         model: options.model || this.DEFAULT_MODEL,
         contents: maskedText,
         config: {
-          systemInstruction: options.systemInstruction || "Tu es un assistant expert pour UNY, une plateforme de gestion de freelances. Réponds de manière professionnelle et concise.",
+          systemInstruction: options.systemInstruction || "You are an expert assistant for UNY, une plateforme de gestion de freelances. Réponds de manière professionnelle et concise.",
           temperature: options.temperature ?? 0.7,
           // maxOutputTokens: options.maxOutputTokens, // Optionnel
         },
       });
 
       const aiResponse = response.text;
-      if (!aiResponse) throw new Error("Réponse vide du modèle.");
+      if (!aiResponse) throw new Error("Empty model response.");
 
       // 5. Démasquage des données dans la réponse (Réinjection des vraies données)
       const finalResponse = PIIMasker.unmask(aiResponse, mapping);
@@ -78,7 +78,7 @@ export class AIEngine {
   }
 
   /**
-   * Log la requête IA dans Supabase (Zéro-Trace)
+   * Log la requête IA dans Supabase (Zero-Trace)
    */
   private static async logAIRequest(hash: string, masked: boolean): Promise<void> {
     try {

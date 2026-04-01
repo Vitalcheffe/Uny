@@ -25,12 +25,12 @@ const StatusBadge = ({ status }: { status: string }) => {
   };
   
   const translatedStatus: Record<string, string> = {
-    'Verified': 'Vérifié',
+    'Verified': 'Verified',
     'Pending Scan': 'Analyse en attente',
-    'Anomaly Detected': 'Anomalie Détectée',
-    'COMPLETED': 'TERMINÉ',
+    'Anomaly Detected': 'Anomaly Detected',
+    'COMPLETED': 'COMPLETED',
     'PROCESSING': 'EN TRAITEMENT',
-    'FAILED': 'ÉCHEC',
+    'FAILED': 'FAILED',
   };
 
   return (
@@ -88,7 +88,7 @@ const DocumentsPage: React.FC = () => {
         .from('documents')
         .getPublicUrl(fileName);
       
-      setExtractionProgress('Charge utile sécurisée. Initiation de la Matrice Légale Profonde...');
+      setExtractionProgress('Secure payload. Initiating Deep Legal Matrix...');
       
       // 2. Create document record
       const docId = await firestoreService.addDocument('documents', orgId, {
@@ -101,7 +101,7 @@ const DocumentsPage: React.FC = () => {
       });
       
       setUploadStatus('analyzing');
-      setExtractionProgress('Gemini 3 Pro : Audit légal haute fidélité...');
+      setExtractionProgress('Gemini 3 Pro: High-fidelity legal audit...');
       
       // 3. NEURAL EXTRACTION (THE MAGIC)
       try {
@@ -112,7 +112,7 @@ const DocumentsPage: React.FC = () => {
           orgId
         );
         
-        setExtractionProgress(`SUCCÈS DE LA FUSION : ${extraction.atoms.length} Atomes de Connaissance validés.`);
+        setExtractionProgress(`FUSION SUCCESS : ${extraction.atoms.length} Knowledge Atoms validated.`);
         setUploadStatus('complete');
         
         setTimeout(() => {
@@ -123,7 +123,7 @@ const DocumentsPage: React.FC = () => {
       } catch (extErr: any) {
         console.error("Forensic Error:", extErr);
         setUploadStatus('failed');
-        setExtractionProgress('Protocole d\'extraction avorté. Méta-récupération active.');
+        setExtractionProgress('Protocole d\'extraction avorté. Meta-recovery active.');
         
         // System Diagnostics
         setDiagnostics({
@@ -161,7 +161,7 @@ const DocumentsPage: React.FC = () => {
           <div className="space-y-3">
             <div className="flex items-center gap-3 text-blue-600">
               <Database size={18} />
-              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Unité d'Archivage</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Archive Unit</span>
             </div>
             <h1 className="text-5xl font-[950] italic uppercase tracking-tighter text-slate-900 leading-none">
               Coffre de <span className="text-slate-400">Connaissances</span>
@@ -179,7 +179,7 @@ const DocumentsPage: React.FC = () => {
              </button>
              <div className="px-6 py-3 bg-white border border-slate-100 rounded-2xl shadow-sm flex items-center gap-3">
                 <ShieldCheck size={16} className="text-emerald-500" />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Sécurité : Nameinale</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Security: Nominal</span>
              </div>
           </div>
         </header>

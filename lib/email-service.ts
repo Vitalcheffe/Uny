@@ -53,7 +53,7 @@ export async function sendInvitationEmail(
     const { error } = await supabase.functions.invoke('send-email', {
       body: {
         to: email,
-        subject: `Bienvenue sur UNY — ${organizationName}`,
+        subject: `Welcome to UNY — ${organizationName}`,
         html,
       },
     });
@@ -114,27 +114,27 @@ function buildInvitationHtml(organizationName: string, inviteUrl: string): strin
 <body style="margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <div style="max-width:600px;margin:40px auto;padding:0 20px;">
     <div style="background:#1e3a8a;color:white;padding:32px;border-radius:16px 16px 0 0;">
-      <h1 style="margin:0;font-size:28px;font-weight:800;">Bienvenue sur UNY</h1>
-      <p style="margin:8px 0 0;opacity:0.85;font-size:14px;">Votre OS souverain pour entreprise</p>
+      <h1 style="margin:0;font-size:28px;font-weight:800;">Welcome to UNY</h1>
+      <p style="margin:8px 0 0;opacity:0.85;font-size:14px;">Your sovereign business OS</p>
     </div>
     <div style="background:white;padding:40px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 16px 16px;">
       <p style="font-size:16px;line-height:1.7;color:#334155;">
         Bonjour,
       </p>
       <p style="font-size:16px;line-height:1.7;color:#334155;">
-        Votre demande d'audit pour <strong>${organizationName}</strong> a été approuvée.
+        Your audit request pour <strong>${organizationName}</strong> has been approved.
         Vous êtes maintenant invité(e) à créer votre compte administrateur.
       </p>
       <div style="text-align:center;margin:32px 0;">
         <a href="${inviteUrl}"
            style="display:inline-block;padding:16px 40px;background:#1e3a8a;color:white;
                   text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;">
-          Créer mon compte
+          Create My Account
         </a>
       </div>
       <p style="font-size:13px;color:#94a3b8;line-height:1.6;">
-        Ce lien expire dans 48 heures.<br>
-        Si vous n'avez pas demandé cette invitation, ignorez cet email.
+        This link expires in 48 hours.<br>
+        If you did not request this invitation, ignore this email.
       </p>
     </div>
   </div>
@@ -152,7 +152,7 @@ function buildPasswordResetHtml(resetUrl: string): string {
 <body style="margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <div style="max-width:600px;margin:40px auto;padding:0 20px;">
     <div style="background:white;padding:40px;border:1px solid #e2e8f0;border-radius:16px;">
-      <h2 style="color:#1e293b;margin:0 0 16px;">Réinitialisation de mot de passe</h2>
+      <h2 style="color:#1e293b;margin:0 0 16px;">Password Reset</h2>
       <p style="color:#475569;line-height:1.7;">
         Cliquez sur le bouton ci-dessous pour réinitialiser votre mot de passe UNY.
       </p>
@@ -160,11 +160,11 @@ function buildPasswordResetHtml(resetUrl: string): string {
         <a href="${resetUrl}"
            style="display:inline-block;padding:14px 32px;background:#1e3a8a;color:white;
                   text-decoration:none;border-radius:10px;font-weight:600;">
-          Réinitialiser mon mot de passe
+          Reset My Password
         </a>
       </div>
       <p style="font-size:13px;color:#94a3b8;">
-        Ce lien expire dans 1 heure. Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.
+        This link expires in 1 heure. If you did not request cette réinitialisation, ignorez cet email.
       </p>
     </div>
   </div>

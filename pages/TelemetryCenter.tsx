@@ -274,7 +274,7 @@ const TelemetryCenter: React.FC = () => {
           <div className="bg-white rounded-[48px] p-10 border border-slate-100 shadow-sm space-y-8">
             <div className="flex items-center gap-4 text-orange-500">
               <BarChart3 size={24} />
-              <h3 className="text-xl font-black italic uppercase tracking-tight">Anomalies Détectées</h3>
+              <h3 className="text-xl font-black italic uppercase tracking-tight">Detected Anomalies</h3>
             </div>
             <div className="space-y-6">
               <div 
