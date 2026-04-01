@@ -1,6 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { logAuditAction, AuditAction } from "./auditService";
-import { firestoreService } from "../lib/firestore-service";
+import { firestoreService } from "../lib/supabase-data-layer";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 

@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { firestoreService } from "../lib/firestore-service";
+import { firestoreService } from "../lib/supabase-data-layer";
 
 export interface AIAnalysisResult {
   entities: {

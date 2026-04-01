@@ -12,7 +12,7 @@ import * as Router from 'react-router-dom';
 const { useNavigate, Link } = Router as any;
 import { useAuth } from '../context/AuthContext';
 import { useCognitive } from '../context/CognitiveContext';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { formatMAD } from '../lib/local-adaptation';
 import { FiscalCalendarWidget } from '../components/FiscalCalendarWidget';
 import SynapseGraph from '../components/dashboard/SynapseGraph';

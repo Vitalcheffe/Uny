@@ -14,7 +14,7 @@ import {
   Wallet, PieChart, ShieldCheck
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { eventBus, EVENTS } from '../lib/eventBus';
 import { formatMAD } from '../lib/local-adaptation';
 

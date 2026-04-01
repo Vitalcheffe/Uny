@@ -24,7 +24,7 @@ declare module 'react' {
 import { Float, MeshDistortMaterial, Sphere, PerspectiveCamera, Environment, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 import { useAuth } from '../context/AuthContext';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { supabase } from '../lib/supabase';
 
 // --- 3D NEURAL CORE COMPONENT ---

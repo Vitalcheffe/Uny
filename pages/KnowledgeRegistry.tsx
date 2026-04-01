@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { aiAnalysisService } from '../services/ai-analysis-service';
 import { 
   Brain, Search, CheckCircle, XCircle, 

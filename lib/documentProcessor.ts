@@ -1,5 +1,5 @@
 
-import { firestoreService } from './firestore-service';
+import { firestoreService } from './supabase-data-layer';
 
 export interface PriceDelta {
   entity_name: string;

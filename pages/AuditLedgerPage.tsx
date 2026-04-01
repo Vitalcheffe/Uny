@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 

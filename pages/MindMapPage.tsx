@@ -11,7 +11,7 @@ import ReactFlow, {
   OnNodesChange,
   applyNodeChanges
 } from 'reactflow';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { useAuth } from '../context/AuthContext';
 // Fix: Use local alias to resolve conflict with local RefreshCw declaration
 import { Network, Database, RefreshCw as LucideRefreshCw, Loader2, Sparkles, Orbit } from 'lucide-react';

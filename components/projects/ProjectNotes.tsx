@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, Send, User, Clock, Terminal, Zap, Loader2 } from 'lucide-react';
-import { firestoreService } from '../../lib/firestore-service';
+import { firestoreService } from '../../lib/supabase-data-layer';
 import { useAuth } from '../../context/AuthContext';
 
 interface Note {

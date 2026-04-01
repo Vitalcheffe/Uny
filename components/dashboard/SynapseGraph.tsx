@@ -8,7 +8,7 @@ import ReactFlow, {
   MarkerType
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { firestoreService } from '../../lib/firestore-service';
+import { firestoreService } from '../../lib/supabase-data-layer';
 import { THEME } from '../../constants/theme';
 
 interface SynapseGraphProps {

@@ -8,7 +8,7 @@ import {
   Clock, TrendingDown
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { Organization } from '../types';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';

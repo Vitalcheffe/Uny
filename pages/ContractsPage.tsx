@@ -7,7 +7,7 @@ import {
   Info, Loader2, Briefcase, User, Truck, Clock, Search,
   Timer, Zap
 } from 'lucide-react';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { useAuth } from '../context/AuthContext';
 import { formatMAD } from '../lib/local-adaptation';
 

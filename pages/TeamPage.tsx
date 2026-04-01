@@ -8,7 +8,7 @@ import {
   RotateCcw, Activity, ShieldCheck, Heart, Mail, Landmark, Network,
   FileText
 } from 'lucide-react';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { useAuth } from '../context/AuthContext';
 import { UserProfile } from '../types';
 import EmployeeDrawer from '../components/team/EmployeeDrawer';

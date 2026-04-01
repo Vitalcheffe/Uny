@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Upload, CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { firestoreService } from '../../lib/firestore-service';
+import { firestoreService } from '../../lib/supabase-data-layer';
 import { useAuth } from '../../context/AuthContext';
 import { processDocument } from '../../lib/ai-engine';
 

@@ -11,7 +11,7 @@ import ReactFlow, {
   Handle,
   Position
 } from 'reactflow';
-import { firestoreService } from '../../lib/firestore-service';
+import { firestoreService } from '../../lib/supabase-data-layer';
 import { useAuth } from '../../context/AuthContext';
 import { Network, Database, RefreshCw, Loader2, ShieldCheck, UserCheck } from 'lucide-react';
 

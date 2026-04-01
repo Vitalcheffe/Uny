@@ -7,7 +7,7 @@ import {
   Clock, Activity, Trash2, Upload, Brain, ShieldAlert,
   Server, Cpu, Wifi
 } from 'lucide-react';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { neuralExtractor } from '../lib/neuralExtractor';

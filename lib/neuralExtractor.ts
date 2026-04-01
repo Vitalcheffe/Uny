@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { firestoreService } from './firestore-service';
+import { firestoreService } from './supabase-data-layer';
 import { extractTextFromPDF, performOCR } from './documentParser';
 import { supabase } from './supabase';
 import { NEREngine } from './ner-engine';

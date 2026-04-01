@@ -6,7 +6,7 @@ import {
   AlertTriangle, X, Info, Loader2, Save, Cpu,
   Users, Fingerprint, Network, ShieldCheck, Zap
 } from 'lucide-react';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { useAuth } from '../context/AuthContext';
 
 const SettingsPage: React.FC = () => {

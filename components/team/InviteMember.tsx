@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { motion as _motion, AnimatePresence } from 'motion/react';
 import { UserPlus, Mail, Shield, Check, Loader2, X, Info, ChevronRight, Zap } from 'lucide-react';
-import { firestoreService } from '../../lib/firestore-service';
+import { firestoreService } from '../../lib/supabase-data-layer';
 import { useAuth } from '../../context/AuthContext';
 import { UserRole } from '../../types';
 

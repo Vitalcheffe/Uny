@@ -1,4 +1,4 @@
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { toast } from 'sonner';
 
 export const organizationService = {

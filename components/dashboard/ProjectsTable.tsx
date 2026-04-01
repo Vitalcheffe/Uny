@@ -3,7 +3,7 @@ import { Project } from '../../types';
 // Fix: Removed Loader2 from import to resolve conflict with local declaration
 import { ChevronDown, PlusCircle, Briefcase, Plus, X, Terminal, Target, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { firestoreService } from '../../lib/firestore-service';
+import { firestoreService } from '../../lib/supabase-data-layer';
 import { useAuth } from '../../context/AuthContext';
 
 const TableSkeleton = () => (

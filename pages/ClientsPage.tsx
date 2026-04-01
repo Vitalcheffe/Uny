@@ -10,7 +10,7 @@ import {
   Download, BrainCircuit, Sparkles, MessageSquare,
   BarChart3, Globe, ShieldCheck, Heart, ArrowRight, FileText
 } from 'lucide-react';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { useAuth } from '../context/AuthContext';
 import { Client, Project } from '../types';
 import { GoogleGenAI, Type } from "@google/genai";

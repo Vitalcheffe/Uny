@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { firestoreService } from "./firestore-service";
+import { firestoreService } from "./supabase-data-layer";
 
 /**
  * UNY NEURAL INGESTION KERNEL v15.0

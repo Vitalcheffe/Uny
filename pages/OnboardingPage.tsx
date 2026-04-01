@@ -4,7 +4,7 @@ import * as Router from 'react-router-dom';
 const { useNavigate } = Router as any;
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { toast } from 'sonner';
 import { 
   ArrowRight, ArrowLeft, Loader2, LogOut,

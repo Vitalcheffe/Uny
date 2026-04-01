@@ -8,7 +8,7 @@ import {
   ArrowUpRight, Landmark, Zap, X, Briefcase, Activity,
   CheckSquare, Square, Download, Trash
 } from 'lucide-react';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { useAuth } from '../context/AuthContext';
 import { Project } from '../types';
 import { logTelemetry } from '../lib/telemetry';

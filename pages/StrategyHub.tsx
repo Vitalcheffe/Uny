@@ -7,7 +7,7 @@ import {
   ShieldAlert, FileWarning, PieChart, Globe, Database
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { firestoreService } from '../lib/firestore-service';
+import { firestoreService } from '../lib/supabase-data-layer';
 import { compareWithHistory, PriceDelta } from '../lib/documentProcessor';
 import { formatMAD } from '../lib/local-adaptation';
 
