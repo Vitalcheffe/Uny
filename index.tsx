@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import * as Router from 'react-router-dom';
-const { HashRouter } = Router as any;
+import { HashRouter } from 'react-router-dom';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { CognitiveProvider } from './context/CognitiveContext';

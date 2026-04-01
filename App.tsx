@@ -10,6 +10,8 @@ import Gate_X92 from './pages/Gate_X92';
 import OnboardingPage from './pages/OnboardingPage';
 import MainDashboard from './layouts/MainDashboard';
 import TrialLockOverlay from './components/TrialLockOverlay';
+import SpotlightSearch from './components/SpotlightSearch';
+import { useAuth } from './context/AuthContext';
 
 const NexusChatPage = lazy(() => import('./pages/NexusChatPage'));
 const ClientsPage = lazy(() => import('./pages/ClientsPage'));
@@ -35,10 +37,9 @@ const BillingControl = lazy(() => import('./pages/admin/BillingControl'));
 const GlobalAudit = lazy(() => import('./pages/admin/GlobalAudit'));
 const AdminAuditRequests = lazy(() => import('./pages/admin/AdminAuditRequests'));
 
-import { useAuth } from './context/AuthContext';
-
 /**
  * SUPER ADMIN ROUTE PROTOCOL
+ */const PIIMonitor = lazy(() => import('./components/admin/PIIMonitor'));
  */
 function SuperAdminRoute({ children }: { children?: React.ReactNode }) {
   const { isSuperAdmin, isLoading, profileLoaded } = useAuth();
@@ -127,8 +128,6 @@ const CatchAllRoute = () => {
   const { user } = useAuth();
   return <Navigate to={user ? "/dashboard" : "/login"} replace />;
 };
-
-import SpotlightSearch from './components/SpotlightSearch';
 
 const App: React.FC = () => {
   const location = useLocation();
