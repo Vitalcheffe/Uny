@@ -1,0 +1,30 @@
+{
+  "name": "uny",
+  "version": "1.0.0",
+  "description": "Sovereign Operating System for African Businesses",
+  "stack": {
+    "frontend": "next.js",
+    "backend": "node.js",
+    "database": "supabase",
+    "language": "typescript"
+  },
+  "structure": {
+    "pages": "pages/",
+    "components": "components/",
+    "lib": "lib/",
+    "types": "types/",
+    "api": "server.ts"
+  },
+  "commands": {
+    "dev": "npm run dev",
+    "build": "npm run build",
+    "test": "npm test",
+    "lint": "npm run lint"
+  },
+  "conventions": {
+    "components": "PascalCase",
+    "files": "kebab-case",
+    "variables": "camelCase",
+    "constants": "UPPER_SNAKE_CASE"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Remix: UNY - Professional Freelance Management",
+  "description": "An all-in-one platform for freelancers to manage clients, projects, and payments without the chaos. From first contract to final invoice, UNY has your back.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  --bg-page: #FFFFFF;
+  --text-main: #0F172A; /* Slate-900 */
+  --accent-royal: #1E3A8A; /* Navy Blue */
+  --border-subtle: #E2E8F0;
+}
+
+body {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+.glow-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.glow-button:hover {
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+  transform: scale(1.02);
+}
+
+.mesh-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.1;
+  pointer-events: none;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(29, 78, 216, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(30, 58, 138, 0.15) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(29, 78, 216, 0.1) 0px, transparent 50%);
+}
+
+.animated-border {
+  position: relative;
+  border-radius: inherit;
+}
+
+.animated-border::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: conic-gradient(from 0deg, transparent, var(--accent-royal), transparent);
+  border-radius: inherit;
+  animation: rotate-border 4s linear infinite;
+  z-index: -1;
+}
+
+@keyframes rotate-border {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Technical Dashboard Recipe Styles */
+.data-row {
+  display: grid;
+  grid-template-columns: 40px 1.5fr 1fr 1fr;
+  padding: 1rem;
+  border-bottom: 1px solid #141414;
+  transition: background 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+}
+
+.data-row:hover {
+  background: #141414;
+  color: #E4E3E0;
+}
+
+.col-header {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: 11px;
+  opacity: 0.5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.data-value {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -0.02em;
+}

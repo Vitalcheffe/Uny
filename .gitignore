@@ -1,0 +1,43 @@
+# Environment variables
+.env
+.env.local
+.env.production
+.env*.local
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+build/
+.next/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Supabase
+.supabase/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+*.pem
+.vercel
