@@ -131,6 +131,63 @@ async function startServer() {
     }
   });
 
+  // ============================================================
+  // GEMINI VISION - Org Chart Analysis
+  // ============================================================
+  app.post('/api/gemini/vision', async (req, res) => {
+    try {
+      const { image, mimeType } = req.body;
+
+      if (!image || !mimeType) {
+        return res.status(400).json({ error: 'Image and mimeType required' });
+      }
+
+      if (!nerEngine) {
+        return res.status(503).json({
+          error: 'Vision engine unavailable. Check GEMINI_API_KEY.',
+        });
+      }
+
+      // Call Gemini with vision
+      const { GoogleGenAI } = await import('@google/genai');
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+
+      const prompt = `Extract all people visible in this organizational chart or document. 
+For each person, return a JSON array with: { "name": string, "role": string, "department": string|null, "reportsTo": string|null }. 
+Return only valid JSON, no markdown.`;
+
+      const result = await ai.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents: [
+          { text: prompt },
+          {
+            inlineData: {
+              mimeType,
+              data: image,
+            },
+          },
+        ],
+      });
+
+      const responseText = result.text || '';
+      
+      // Parse JSON response
+      const jsonText = responseText
+        .replace(/```json\n?/g, '')
+        .replace(/```\n?/g, '')
+        .trim();
+      
+      const parsed = JSON.parse(jsonText);
+      const employees = parsed.employees || parsed;
+
+      res.json({ employees });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Vision analysis failed';
+      console.error('❌ [Server] Vision error:', message);
+      res.status(500).json({ error: message });
+    }
+  });
+
   // NER Unmask endpoint (placeholder for Redis integration)
   app.post('/api/ner/unmask', async (req, res) => {
     try {
@@ -157,6 +214,68 @@ async function startServer() {
     // Paddle v2 uses client-side checkout via Paddle.js
     // This endpoint exists for server-side validation if needed
     res.json({ success: true, message: 'Use client-side Paddle.js checkout' });
+  });
+
+  // ============================================================
+  // SOVEREIGN AI CHAT
+  // ============================================================
+  app.post('/api/ai/chat', async (req, res) => {
+    try {
+      const { message, orgId, history } = req.body;
+
+      if (!message || typeof message !== 'string') {
+        return res.status(400).json({ error: 'Message is required' });
+      }
+
+      if (!process.env.GEMINI_API_KEY) {
+        return res.status(503).json({ error: 'AI not configured' });
+      }
+
+      // Build conversation context
+      const systemPrompt = `Tu es UNY, un assistant IA expert pour les entreprises africaines.
+Tu helps with: finance, HR, projects, strategy, compliance loi 09-08 (Morocco).
+Respond in French or English based on the question language.
+Be concise and professional.`;
+
+      // Call Gemini
+      const { GoogleGenAI } = await import('@google/genai');
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+      const contents: any[] = [{ text: systemPrompt }];
+      
+      // Add history
+      if (history && Array.isArray(history)) {
+        for (const h of history.slice(-10)) {
+          contents.push({ text: h.content });
+        }
+      }
+      contents.push({ text: message });
+
+      const result = await ai.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents,
+      });
+
+      const response = result.text || '';
+
+      // Save to conversation history in Supabase (if configured)
+      if (supabaseAdmin && orgId) {
+        const { error: insertError } = await supabaseAdmin.from('conversations').insert({
+          org_id: orgId,
+          user_message: message,
+          ai_response: response,
+        });
+        if (insertError) {
+          console.warn('Failed to save conversation:', insertError);
+        }
+      }
+
+      res.json({ response });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'AI chat failed';
+      console.error('❌ [Server] AI chat error:', message);
+      res.status(500).json({ error: message });
+    }
   });
 
   // ============================================================
