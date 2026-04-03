@@ -156,35 +156,34 @@ export class DataService {
     email: string;
     team_size: string;
     industry: string;
-    annual_revenue: string;
-    type?: string;
-    metadata?: Record<string, any>;
   }): Promise<boolean> {
     try {
-      console.log("DEBUG_AUDIT_PAYLOAD", payload);
+      console.log("DEBUG:", payload);
       
-      const { error } = await (supabase as any)
+      // ONLY use columns that exist in table
+      const insertData = {
+        company_name: payload.company_name,
+        email: payload.email,
+        team_size: payload.team_size || '1-10',
+        industry: payload.industry || 'TECH',
+        status: 'PENDING'
+      };
+      
+      const { error } = await supabase
         .from('audit_requests')
-        .insert({
-          company_name: payload.company_name,
-          organization_name: payload.company_name, // Fallback for NOT NULL constraint
-          email: payload.email,
-          team_size: payload.team_size,
-          industry: payload.industry,
-          annual_revenue: payload.annual_revenue,
-          type: payload.type || 'STANDARD',
-          metadata: payload.metadata || {},
-          status: 'PENDING'
-        });
+        .insert(insertData);
 
-      if (error) throw error;
+      if (error) {
+        console.error("INSERT ERROR:", error);
+        throw new Error(error.message);
+      }
       
-      toast.success("Demande d'audit envoyée avec succès !");
+      console.log("SUCCESS - request created");
       return true;
     } catch (error: any) {
-      console.error(`❌ [DataService] createAuditRequest fault: ${error.message}`);
-      toast.error(`Failure de l'envoi: ${error.message}`);
+      console.error("ERROR:", error.message);
       return false;
     }
+  }
   }
 }
