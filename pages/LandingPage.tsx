@@ -202,23 +202,34 @@ const LandingPage: React.FC = () => {
 
   const handleAuditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!auditForm.orgName || !auditForm.email) return;
+    if (!auditForm.orgName || !auditForm.email) {
+      alert('Veuillez remplir le nom de votre entreprise et votre email');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
+      console.log('📤 Sending audit request:', auditForm);
+      
       const success = await DataService.createAuditRequest({
         company_name: auditForm.orgName,
         email: auditForm.email,
         team_size: auditForm.teamSize,
         industry: auditForm.industry,
-        annual_revenue: 'N/A' // Default value as it's not in the form
+        annual_revenue: 'N/A'
       });
+      
+      console.log('✅ Response:', success);
       
       if (success) {
         setIsSubmitted(true);
+        alert('Demande envoyée avec succès! Nous vous répondrons sous 24h.');
+      } else {
+        alert('Erreur: La demande n\'a pas pu être envoyée. Veuillez réessayer.');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('🛡️ [Kernel] Audit request failed:', error);
+      alert('Erreur: ' + (error?.message || 'Une erreur est survenue'));
     } finally {
       setIsSubmitting(false);
     }
