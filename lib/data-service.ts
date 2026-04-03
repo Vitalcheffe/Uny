@@ -158,27 +158,42 @@ export class DataService {
     industry: string;
   }): Promise<boolean> {
     try {
-      console.log("DEBUG:", payload);
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
       
-      // ONLY use columns that exist in table
-      const insertData = {
-        company_name: payload.company_name,
-        email: payload.email,
-        team_size: payload.team_size || '1-10',
-        industry: payload.industry || 'TECH',
-        status: 'PENDING'
-      };
+      console.log("URL:", supabaseUrl);
+      console.log("KEY:", supabaseKey ? "exists" : "MISSING");
       
-      const { error } = await supabase
-        .from('audit_requests')
-        .insert(insertData);
-
-      if (error) {
-        console.error("INSERT ERROR:", error);
-        throw new Error(error.message);
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error("Missing Supabase config");
       }
       
-      console.log("SUCCESS - request created");
+      const response = await fetch(`${supabaseUrl}/rest/v1/audit_requests`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          company_name: payload.company_name,
+          email: payload.email,
+          team_size: payload.team_size || '1-10',
+          industry: payload.industry || 'TECH',
+          status: 'PENDING'
+        })
+      });
+
+      console.log("Response status:", response.status);
+      
+      if (!response.ok) {
+        const errText = await response.text();
+        console.error("Error response:", errText);
+        throw new Error(errText);
+      }
+      
+      console.log("SUCCESS!");
       return true;
     } catch (error: any) {
       console.error("ERROR:", error.message);
