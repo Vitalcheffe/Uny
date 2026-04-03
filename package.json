@@ -30,8 +30,10 @@
     "cors": "^2.8.6",
     "date-fns": "^4.1.0",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.3.2",
     "framer-motion": "11.11.11",
     "gantt-task-react": "0.3.9",
+    "helmet": "^8.1.0",
     "i18next": "^26.0.3",
     "i18next-browser-languagedetector": "^8.2.1",
     "idb": "^8.0.3",
@@ -46,7 +48,8 @@
     "sonner": "^2.0.7",
     "stripe": "^20.4.1",
     "three": "0.170.0",
-    "tsx": "^4.21.0"
+    "tsx": "^4.21.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.1",

@@ -7,6 +7,8 @@
 
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -95,6 +97,34 @@ async function startServer() {
   // JSON middleware for all other routes
   app.use(express.json());
   app.use(cors());
+
+  // Security: Helmet headers
+  app.use(helmet());
+  app.use(helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  }));
+
+  // Security: Rate limiting
+  const publicLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: { error: 'Trop de demandes. Réessayez plus tard.' },
+  });
+
+  const aiLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 20, // limit AI requests to 20 per minute
+    message: { error: 'Limite IA dépassée. Réessayez dans une minute.' },
+  });
+
+  app.use('/api/', publicLimiter);
+  app.use('/api/ai/', aiLimiter);
+  app.use('/api/gemini/', aiLimiter);
 
   // ============================================================
   // NER ENGINE - PII Masking
@@ -395,6 +425,53 @@ Be concise and professional.`;
       console.error('❌ [Server] Invitation error:', message);
       res.status(500).json({ error: message });
     }
+  });
+
+  // ============================================================
+  // AI QUOTA CHECK MIDDLEWARE
+  // ============================================================
+  const checkAIQuota = async (orgId: string): Promise<{ allowed: boolean; used: number; limit: number }> => {
+    if (!supabaseAdmin) return { allowed: true, used: 0, limit: 5000 };
+
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+    const { count } = await supabaseAdmin
+      .from('ai_usage')
+      .select('*', { count: 'exact', head: true })
+      .eq('org_id', orgId)
+      .gte('created_at', monthStart);
+
+    const used = count || 0;
+    const { data: org } = await supabaseAdmin
+      .from('organizations')
+      .select('plan')
+      .eq('id', orgId)
+      .single();
+
+    const limits: Record<string, number> = { starter: 500, pro: 5000, enterprise: 999999999 };
+    const limit = limits[org?.plan || 'starter'];
+
+    return { allowed: used < limit, used, limit };
+  };
+
+  // Record AI usage
+  const recordAIUsage = async (orgId: string, userId: string, tokensIn: number, tokensOut: number) => {
+    if (!supabaseAdmin) return;
+    const { error } = await supabaseAdmin.from('ai_usage').insert({
+      org_id: orgId,
+      user_id: userId,
+      tokens_in: tokensIn,
+      tokens_out: tokensOut,
+    });
+    if (error) console.warn('Failed to record AI usage:', error);
+  };
+
+  // ============================================================
+  // HEALTH CHECK
+  // ============================================================
+  app.get('/api/health', (_req, res) => {
+    res.json({ status: 'ok', version: '1.0.0', timestamp: new Date().toISOString() });
   });
 
   // ============================================================

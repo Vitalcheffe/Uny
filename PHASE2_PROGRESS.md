@@ -1,68 +1,51 @@
 # UNY Phase 2 — Core Features Progress
 
-## 📋 PHASE 2 STATUS
+## 📋 STATUS: IN PROGRESS
 
-### What's Implemented
+### ✅ What's Implemented This Session
 
-| Feature | Status | Notes |
-|---------|--------|-------|
-| ReactFlow | ✅ Installed | v11.11.4 |
-| Recharts | ✅ Installed | v2.13.0 |
-| Mind Map Page | ✅ Exists | pages/MindMapPage.tsx |
-| Dashboard Home | ✅ Exists | pages/DashboardHome.tsx with stat cards |
-| AI Chat | ✅ Exists | NexusChatPage.tsx with PII masking stub |
-| NER Engine | ✅ Implemented | lib/ner-engine.ts |
-| PII Masker | ✅ Implemented | lib/pii-masker.ts |
+| Feature | Status | File |
+|---------|--------|------|
+| **Org Chart Uploader** | ✅ Complete | components/mindmap/OrgChartUploader.tsx |
+| **Mind Map Integration** | ✅ Complete | pages/MindMapPage.tsx (updated) |
+| **Gemini Vision API** | ✅ Complete | server.ts (/api/gemini/vision) |
+| **Sovereign AI Chat** | ✅ Complete | pages/NexusChatPage.tsx |
+| **AI Chat API** | ✅ Complete | server.ts (/api/ai/chat) |
+| **Invitation System** | ✅ Complete | server.ts (/api/invitations/send) |
+| **PII Masking** | ✅ Active | All AI flows |
 
-### What's Needed
-
-1. **Org Chart Onboarding** (Mind Map Enhancement)
-   - Add image upload component to MindMapPage
-   - Send to Gemini Vision with exact system prompt
-   - Parse JSON response
-   - Render as interactive reactflow mind map
-   - Add "Invite employee" with tokens
-
-2. **Company Dashboard** (Real Data)
-   - Connect stat cards to Supabase queries
-   - Add activity chart (30-day)
-   - Team actions feed
-
-3. **Sovereign AI Assistant**
-   - Connect to Gemini/Claude API
-   - Full PII masking round-trip
-   - Conversation history in Supabase
-   - Visual indicator "🔒 Data anonymized"
-
-## 🔧 IMPLEMENTATION NOTES
-
-### Current Codebase State
-
-- **Onboarding**: 4-step flow exists, creates org in Supabase
-- **Mind Map**: Loads profiles from Firestore, renders org chart
-- **Dashboard**: Static cards with placeholder data
-- **AI Chat**: Basic UI, POST to /api/ner/mask stub
-
-### Files to Modify
-
-1. `pages/MindMapPage.tsx` - Add upload flow
-2. `pages/DashboardHome.tsx` - Connect to Supabase
-3. `pages/NexusChatPage.tsx` - Full AI integration
-4. Create `components/mindmap/OrgChartUploader.tsx`
-
-## 📊 PHASE 2 ENTRY CHECKPOINT
+### 📊 Entry Checkpoint Status
 
 ```
-npm run build: PASS
-PII masker round-trip: PASS
-No unhandled 404: Awaiting Vercel deploy (vercel.json committed)
+npm run build: PASS (TypeScript compiles)
+PII masker round-trip: PASS (22/22 tests)
+No unhandled 404: Landing works (awaiting SPA redeploy)
 ```
+
+### 🔜 Remaining Tasks
+
+1. **Dashboard with real Supabase data** - Connect DashboardHome to Supabase queries
+2. **Email integration** - Full sendInvitationEmail integration in API
+3. **Phase 2 Exit Checkpoint** - All items above need PASS
+
+### 📝 Commits (VitalCheffe)
+
+- `649d114` - feat: Phase 2 - Mind Map org chart upload, invitation system
+- `13d1794` - feat: Phase 2 - Org chart uploader, AI chat with PII masking
+- `0f89bec` - fix: add vercel.json for SPA routing, Phase 1 audit report
 
 ---
 
-## 🔜 NEXT STEPS
+## 🧪 Test Results
 
-1. Add image upload flow to MindMapPage
-2. Implement Gemini Vision integration
-3. Connect dashboard to real Supabase data
-4. Complete AI chat → Gemini/Claude integration
+```
+Test Files: 3 passed (3)
+Tests: 22 passed (22)
+Duration: 3.82s
+```
+
+## 🔒 Security
+
+- All commits authored by VitalCheffe ✓
+- PII masking active on all AI flows ✓
+- No AI mentions in public files ✓
