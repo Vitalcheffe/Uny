@@ -609,8 +609,40 @@ Be concise and professional.`;
   // ============================================================
   // HEALTH CHECK
   // ============================================================
-  app.get('/api/health', (_req, res) => {
-    res.json({ status: 'ok', version: '1.0.0', timestamp: new Date().toISOString() });
+  app.get('/api/health', async (_req, res) => {
+    const start = Date.now();
+    
+    // Check Supabase
+    let dbStatus = 'healthy';
+    try {
+      if (supabaseAdmin) {
+        const { error } = await supabaseAdmin.from('organizations').select('id').limit(1);
+        dbStatus = error ? 'error' : 'healthy';
+      } else {
+        dbStatus = 'not_configured';
+      }
+    } catch {
+      dbStatus = 'error';
+    }
+
+    // Check external services
+    const services = {
+      supabase: dbStatus,
+      smtp: emailTransport ? 'healthy' : 'not_configured',
+      paddle: paddle ? 'healthy' : 'not_configured',
+      gemini: process.env.GEMINI_API_KEY ? 'healthy' : 'not_configured',
+    };
+
+    const responseTime = Date.now() - start;
+
+    res.json({
+      status: 'ok',
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      responseTime: `${responseTime}ms`,
+      services,
+    });
   });
 
   // ============================================================
