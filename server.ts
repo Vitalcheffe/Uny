@@ -614,6 +614,135 @@ Be concise and professional.`;
   });
 
   // ============================================================
+  // AUDIT REQUEST MANAGEMENT
+  // ============================================================
+  
+  // Get all pending audit requests (admin only)
+  app.get('/api/admin/audit-requests', async (_req, res) => {
+    try {
+      if (!supabaseAdmin) {
+        return res.status(503).json({ error: 'Database not configured' });
+      }
+      
+      const { data, error } = await supabaseAdmin
+        .from('audit_requests')
+        .select('*')
+        .eq('status', 'PENDING')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      res.json({ requests: data || [] });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to fetch';
+      res.status(500).json({ error: message });
+    }
+  });
+
+  // Approve audit request and send invitation
+  app.post('/api/admin/approve-audit', async (req, res) => {
+    try {
+      const { requestId, orgName } = req.body;
+      
+      if (!requestId) {
+        return res.status(400).json({ error: 'requestId required' });
+      }
+
+      if (!supabaseAdmin) {
+        return res.status(503).json({ error: 'Database not configured' });
+      }
+
+      // Get the audit request
+      const { data: request, error: fetchError } = await supabaseAdmin
+        .from('audit_requests')
+        .select('*')
+        .eq('id', requestId)
+        .single();
+
+      if (fetchError || !request) {
+        return res.status(404).json({ error: 'Request not found' });
+      }
+
+      // Generate invite token
+      const inviteToken = crypto.randomUUID();
+      const appUrl = process.env.VITE_APP_URL || 'https://uny-gamma.vercel.app';
+      const inviteUrl = `${appUrl}/register?token=${inviteToken}`;
+
+      // Update status to APPROVED
+      const { error: updateError } = await supabaseAdmin
+        .from('audit_requests')
+        .update({ 
+          status: 'APPROVED',
+          invitation_token: inviteToken,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', requestId);
+
+      if (updateError) throw updateError;
+
+      // Send approval email to company
+      if (emailTransport) {
+        await emailTransport.sendMail({
+          from: process.env.SMTP_FROM || 'UNY <noreply@uny.com>',
+          to: request.email,
+          subject: `Votre demande UNY a été approuvée!`,
+          html: `
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+              <h1 style="color: #1a1615;">🎉 Bienvenue chez UNY!</h1>
+              <p>Bonjour,</p>
+              <p>Votre demande d'audit pour <strong>${request.company_name}</strong> a été approuvée!</p>
+              <p>Cliquez ci-dessous pour créer votre compte et configurer votre entreprise:</p>
+              <a href="${inviteUrl}" style="display: inline-block; background: #3b82f6; color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; margin: 24px 0; font-size: 18px;">
+                Créer mon compte UNY
+              </a>
+              <p style="color: #666; font-size: 14px;">Ce lien expire dans 7 jours.</p>
+            </div>
+          `,
+        });
+        console.log(`📧 Approval email sent to ${request.email}`);
+      } else {
+        console.log(`⚠️ SMTP not configured. Invite URL: ${inviteUrl}`);
+      }
+
+      res.json({ success: true, inviteUrl });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Approval failed';
+      console.error('❌ [Server] Approval error:', message);
+      res.status(500).json({ error: message });
+    }
+  });
+
+  // Reject audit request
+  app.post('/api/admin/reject-audit', async (req, res) => {
+    try {
+      const { requestId, reason } = req.body;
+      
+      if (!requestId) {
+        return res.status(400).json({ error: 'requestId required' });
+      }
+
+      if (!supabaseAdmin) {
+        return res.status(503).json({ error: 'Database not configured' });
+      }
+
+      const { error: updateError } = await supabaseAdmin
+        .from('audit_requests')
+        .update({ 
+          status: 'REJECTED',
+          rejection_reason: reason || '',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', requestId);
+
+      if (updateError) throw updateError;
+
+      res.json({ success: true });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Rejection failed';
+      res.status(500).json({ error: message });
+    }
+  });
+
+  // ============================================================
   // VITE DEV SERVER INTEGRATION
   // ============================================================
   if (process.env.NODE_ENV !== 'production') {
