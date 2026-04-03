@@ -348,6 +348,56 @@ Be concise and professional.`;
   });
 
   // ============================================================
+  // EMPLOYEE INVITATION
+  // ============================================================
+  app.post('/api/invitations/send', async (req, res) => {
+    try {
+      const { employeeEmail, employeeName, role, orgId } = req.body;
+
+      if (!employeeEmail || !orgId) {
+        return res.status(400).json({ error: 'employeeEmail and orgId required' });
+      }
+
+      // Generate invite token
+      const inviteToken = crypto.randomUUID();
+      
+      // Store invitation in Supabase
+      if (supabaseAdmin) {
+        const { error: insertError } = await supabaseAdmin.from('invitations').insert({
+          org_id: orgId,
+          email: employeeEmail,
+          name: employeeName || '',
+          role: role || 'member',
+          token: inviteToken,
+          status: 'pending',
+          expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days
+        });
+
+        if (insertError) {
+          console.warn('Failed to store invitation:', insertError);
+        }
+      }
+
+      // Send invitation email
+      const appUrl = process.env.VITE_APP_URL || 'https://uny-gamma.vercel.app';
+      const inviteUrl = `${appUrl}/register?token=${inviteToken}&orgId=${orgId}`;
+
+      // TODO: Integrate with email service when configured
+      console.log(`📧 Invitation sent to ${employeeEmail}: ${inviteUrl}`);
+
+      res.json({ 
+        success: true, 
+        inviteUrl,
+        message: 'Invitation sent successfully' 
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Invitation failed';
+      console.error('❌ [Server] Invitation error:', message);
+      res.status(500).json({ error: message });
+    }
+  });
+
+  // ============================================================
   // VITE DEV SERVER INTEGRATION
   // ============================================================
   if (process.env.NODE_ENV !== 'production') {

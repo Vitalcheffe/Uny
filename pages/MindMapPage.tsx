@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactFlow, { 
   Node, 
   Edge, 
@@ -13,8 +13,8 @@ import ReactFlow, {
 } from 'reactflow';
 import { firestoreService } from '../lib/supabase-data-layer';
 import { useAuth } from '../context/AuthContext';
-// Fix: Use local alias to resolve conflict with local RefreshCw declaration
-import { Network, Database, RefreshCw as LucideRefreshCw, Loader2, Sparkles, Orbit } from 'lucide-react';
+import { Network, Database, RefreshCw as LucideRefreshCw, Loader2, Sparkles, Orbit, Upload } from 'lucide-react';
+import OrgChartUploader from '../components/mindmap/OrgChartUploader';
 
 const nodeStyles: Record<string, any> = {
   organization: { background: '#1a1615', color: '#fff', borderRadius: '50%', width: 160, height: 160, border: '6px solid #3b82f6', fontWeight: '950', fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', boxShadow: '0 25px 60px rgba(0, 0, 0, 0.4)', textTransform: 'uppercase', fontStyle: 'italic' },
@@ -26,6 +26,26 @@ const MindMapPage: React.FC = () => {
   const [nodes, setNodes, onNodesChangeState] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [loading, setLoading] = useState(false);
+  const [showUploader, setShowUploader] = useState(false);
+
+  // Handle nodes generated from org chart upload
+  const handleNodesGenerated = useCallback((newNodes: Node[], newEdges: Edge[]) => {
+    // Add the organization center node if not present
+    const hasOrgCenter = newNodes.some(n => n.id === 'org_center');
+    if (!hasOrgCenter) {
+      newNodes.unshift({
+        id: 'org_center',
+        data: { label: userProfilee?.metadata?.company_name || 'KERNEL CORE' },
+        position: { x: 500, y: 500 },
+        style: nodeStyles.organization,
+        type: 'default',
+        selectable: false,
+      });
+    }
+    setNodes(newNodes);
+    setEdges(newEdges);
+    setShowUploader(false);
+  }, [userProfilee, setNodes, setEdges]);
 
   // Custom onNodesChange to handle selection and trigger edge updates
   const onNodesChange: OnNodesChange = useCallback(
@@ -187,6 +207,9 @@ const MindMapPage: React.FC = () => {
               <Orbit size={16} className="text-blue-500 animate-spin-slow" />
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Nœuds Synchronisés : {nodes.length}</span>
            </div>
+           <button onClick={() => setShowUploader(true)} className="bg-blue-600 text-white px-8 py-4 rounded-full font-black text-[10px] uppercase tracking-widest flex items-center gap-3 hover:bg-blue-700 shadow-xl transition-all italic">
+            <Upload size={16} /> IMPORTER ORG CHART
+          </button>
            <button onClick={loadGraph} className="bg-black text-white px-8 py-4 rounded-full font-black text-[10px] uppercase tracking-widest flex items-center gap-3 hover:bg-slate-800 shadow-xl transition-all italic">
             <LucideRefreshCw size={16} className={loading ? 'animate-spin' : ''} /> SYNCHRONISER LE GRAPHE
           </button>
@@ -214,6 +237,23 @@ const MindMapPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Org Chart Uploader Modal */}
+      {showUploader && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-8">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <OrgChartUploader onNodesGenerated={handleNodesGenerated} />
+            <div className="p-6 pt-0">
+              <button 
+                onClick={() => setShowUploader(false)}
+                className="w-full py-3 text-slate-500 hover:text-slate-700 font-medium"
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
