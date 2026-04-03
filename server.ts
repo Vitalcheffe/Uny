@@ -14,6 +14,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { Environment, LogLevel, Paddle } from '@paddle/paddle-node-sdk';
 import { createClient } from '@supabase/supabase-js';
+import nodemailer from 'nodemailer';
 import { NEREngine } from './lib/ner-engine';
 import { PaddleService } from './lib/paddle-service';
 
@@ -49,6 +50,57 @@ const paddle = process.env.PADDLE_API_KEY
 const nerEngine = process.env.GEMINI_API_KEY
   ? new NEREngine(process.env.GEMINI_API_KEY)
   : null;
+
+// --- In-Memory Session Store (TTL: 10 minutes) ---
+const sessionStore = new Map<string, { mapping: Map<string, string>; expires: number }>();
+
+const SESSION_TTL = 10 * 60 * 1000; // 10 minutes
+
+const setSession = (sessionId: string, mapping: Map<string, string>) => {
+  sessionStore.set(sessionId, {
+    mapping,
+    expires: Date.now() + SESSION_TTL,
+  });
+  // Clean up expired sessions periodically
+  if (sessionStore.size > 1000) {
+    const now = Date.now();
+    for (const [key, value] of sessionStore) {
+      if (value.expires < now) sessionStore.delete(key);
+    }
+  }
+};
+
+const getSession = (sessionId: string): Map<string, string> | null => {
+  const session = sessionStore.get(sessionId);
+  if (!session) return null;
+  if (session.expires < Date.now()) {
+    sessionStore.delete(sessionId);
+    return null;
+  }
+  return session.mapping;
+};
+
+// --- Nodemailer Transport ---
+const createEmailTransport = () => {
+  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM } = process.env;
+  
+  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
+    console.warn('⚠️ SMTP not configured. Email sending disabled.');
+    return null;
+  }
+
+  return nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: parseInt(SMTP_PORT || '587'),
+    secure: SMTP_PORT === '465',
+    auth: {
+      user: SMTP_USER,
+      pass: SMTP_PASS,
+    },
+  });
+};
+
+const emailTransport = createEmailTransport();
 
 async function startServer() {
   const app = express();
@@ -146,8 +198,9 @@ async function startServer() {
       const { anonymized, mapping, entitiesDetected } =
         await nerEngine.anonymize(text);
 
-      // TODO: Store mapping in Redis for session-based unmasking
+      // Store mapping in session store for unmasking
       const sessionId = crypto.randomUUID();
+      setSession(sessionId, mapping);
 
       res.json({
         sessionId,
@@ -218,7 +271,7 @@ Return only valid JSON, no markdown.`;
     }
   });
 
-  // NER Unmask endpoint (placeholder for Redis integration)
+  // NER Unmask endpoint
   app.post('/api/ner/unmask', async (req, res) => {
     try {
       const { sessionId, text } = req.body;
@@ -227,9 +280,22 @@ Return only valid JSON, no markdown.`;
         return res.status(400).json({ error: 'Text is required' });
       }
 
-      // TODO: Retrieve mapping from Redis using sessionId
-      // For now, return as-is
-      res.json({ original: text });
+      if (!sessionId) {
+        return res.status(400).json({ error: 'sessionId is required' });
+      }
+
+      // Retrieve mapping from session store
+      const mapping = getSession(sessionId);
+      if (!mapping) {
+        return res.status(404).json({ error: 'Session expired or not found' });
+      }
+
+      // Deanonymize using the stored mapping
+      const original = nerEngine
+        ? await nerEngine.deanonymize(text, mapping)
+        : text;
+
+      res.json({ original });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unmask failed';
       console.error('❌ [Server] NER unmask error:', message);
@@ -251,7 +317,7 @@ Return only valid JSON, no markdown.`;
   // ============================================================
   app.post('/api/ai/chat', async (req, res) => {
     try {
-      const { message, orgId, history } = req.body;
+      let { message, orgId, history } = req.body;
 
       if (!message || typeof message !== 'string') {
         return res.status(400).json({ error: 'Message is required' });
@@ -259,6 +325,18 @@ Return only valid JSON, no markdown.`;
 
       if (!process.env.GEMINI_API_KEY) {
         return res.status(503).json({ error: 'AI not configured' });
+      }
+
+      // AI Quota check (if orgId provided)
+      if (orgId) {
+        const quota = await checkAIQuota(orgId);
+        if (!quota.allowed) {
+          return res.status(429).json({
+            error: 'Monthly AI quota exceeded',
+            used: quota.used,
+            limit: quota.limit,
+          });
+        }
       }
 
       // Build conversation context
@@ -288,6 +366,12 @@ Be concise and professional.`;
 
       const response = result.text || '';
 
+      // Record AI usage after successful response
+      if (orgId) {
+        const userId = (req as any).user?.id || null;
+        await recordAIUsage(orgId, userId || '', message.length, response.length);
+      }
+
       // Save to conversation history in Supabase (if configured)
       if (supabaseAdmin && orgId) {
         const { error: insertError } = await supabaseAdmin.from('conversations').insert({
@@ -313,19 +397,50 @@ Be concise and professional.`;
   // ============================================================
   app.get('/api/paddle/stats', async (_req, res) => {
     try {
-      if (!process.env.PADDLE_API_KEY) {
-        return res.status(503).json({ error: 'Paddle not configured' });
+      // Check if Paddle is configured
+      if (!process.env.PADDLE_API_KEY || !paddle) {
+        return res.json({
+          mrr: 0,
+          pending: 0,
+          failed: 0,
+          configured: false,
+        });
       }
 
-      // In production, query Paddle API for real MRR data
+      // Query real Paddle API for subscription data
+      const subList = await paddle.subscriptions.list() as any;
+      const subscriptions = subList?.results || [];
+      
+      let mrr = 0;
+      let pending = 0;
+      let failed = 0;
+
+      for (const sub of subscriptions) {
+        if (sub.status === 'active') {
+          mrr += sub.recurringPriceValue || 0;
+        } else if (sub.status === 'pending') {
+          pending++;
+        } else if (sub.status === 'past_due' || sub.status === 'failed') {
+          failed++;
+        }
+      }
+
       res.json({
-        mrr: 12500,
-        pending: 3,
-        failed: 1,
+        mrr: mrr / 100, // Convert from cents
+        pending,
+        failed,
+        configured: true,
       });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Stats error';
-      res.status(500).json({ error: message });
+      console.error('❌ [Server] Paddle stats error:', message);
+      res.json({
+        mrr: 0,
+        pending: 0,
+        failed: 0,
+        configured: true,
+        error: message,
+      });
     }
   });
 
@@ -412,8 +527,32 @@ Be concise and professional.`;
       const appUrl = process.env.VITE_APP_URL || 'https://uny-gamma.vercel.app';
       const inviteUrl = `${appUrl}/register?token=${inviteToken}&orgId=${orgId}`;
 
-      // TODO: Integrate with email service when configured
-      console.log(`📧 Invitation sent to ${employeeEmail}: ${inviteUrl}`);
+      // Send email via nodemailer if configured
+      if (emailTransport) {
+        try {
+          await emailTransport.sendMail({
+            from: process.env.SMTP_FROM || 'UNY <noreply@uny.com>',
+            to: employeeEmail,
+            subject: `Invitation to UNY - Set up your account`,
+            html: `
+              <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+                <h1 style="color: #1a1615;">Welcome to UNY</h1>
+                <p>Hi${employeeName ? ` ${employeeName}` : ''},</p>
+                <p>You've been invited to join UNY, the sovereign operating system for African businesses.</p>
+                <a href="${inviteUrl}" style="display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 16px 0;">
+                  Accept Invitation
+                </a>
+                <p style="color: #666; font-size: 14px;">This link expires in 7 days.</p>
+              </div>
+            `,
+          });
+          console.log(`📧 Invitation email sent to ${employeeEmail}`);
+        } catch (emailErr) {
+          console.error('Failed to send invitation email:', emailErr);
+        }
+      } else {
+        console.warn('⚠️ SMTP not configured. Email not sent. Invite URL:', inviteUrl);
+      }
 
       res.json({ 
         success: true, 
