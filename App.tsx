@@ -37,6 +37,7 @@ const CompaniesMaster = lazy(() => import('./pages/admin/CompaniesMaster'));
 const BillingControl = lazy(() => import('./pages/admin/BillingControl'));
 const GlobalAudit = lazy(() => import('./pages/admin/GlobalAudit'));
 const AdminAuditRequests = lazy(() => import('./pages/admin/AdminAuditRequests'));
+const SuperAdminDashboard = lazy(() => import('./pages/admin/SuperAdminDashboard'));
 
 /**
  * Super Admin route guard.
@@ -229,6 +230,11 @@ const App: React.FC = () => {
             <Route path="admin/global-audit" element={
               <SuperAdminRoute>
                 <GlobalAudit />
+              </SuperAdminRoute>
+            } />
+            <Route path="admin/super" element={
+              <SuperAdminRoute>
+                <SuperAdminDashboard />
               </SuperAdminRoute>
             } />
             <Route path="admin/audit-requests" element={
