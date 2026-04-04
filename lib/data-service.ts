@@ -154,8 +154,10 @@ export class DataService {
   static async createAuditRequest(payload: {
     company_name: string;
     email: string;
-    team_size: string;
-    industry: string;
+    phone?: string;
+    job_position?: string;
+    team_size?: string;
+    industry?: string;
   }): Promise<boolean> {
     try {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -179,6 +181,8 @@ export class DataService {
         body: JSON.stringify({
           company_name: payload.company_name,
           email: payload.email,
+          phone: payload.phone || '',
+          job_position: payload.job_position || '',
           team_size: payload.team_size || '1-10',
           industry: payload.industry || 'TECH',
           status: 'PENDING'

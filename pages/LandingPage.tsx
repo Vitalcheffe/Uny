@@ -194,6 +194,8 @@ const LandingPage: React.FC = () => {
   const [auditForm, setAuditForm] = useState({
     orgName: '',
     email: '',
+    phone: '',
+    jobPosition: '',
     teamSize: '1-10 Employés',
     industry: 'AUTRE'
   });
@@ -202,8 +204,8 @@ const LandingPage: React.FC = () => {
 
   const handleAuditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!auditForm.orgName || !auditForm.email) {
-      alert('Veuillez remplir le nom de votre entreprise et votre email');
+    if (!auditForm.orgName || !auditForm.email || !auditForm.phone) {
+      alert('Veuillez remplire le nom de votre entreprise, email et téléphone');
       return;
     }
 
@@ -214,6 +216,8 @@ const LandingPage: React.FC = () => {
       const success = await DataService.createAuditRequest({
         company_name: auditForm.orgName,
         email: auditForm.email,
+        phone: auditForm.phone,
+        job_position: auditForm.jobPosition,
         team_size: auditForm.teamSize,
         industry: auditForm.industry,
         annual_revenue: 'N/A'
@@ -1167,6 +1171,27 @@ const LandingPage: React.FC = () => {
                         value={auditForm.email}
                         onChange={(e) => setAuditForm({...auditForm, email: e.target.value})}
                         placeholder="CEO@ATLAS.MA" 
+                        className="w-full bg-slate-50 border border-slate-200 rounded-3xl px-8 py-5 text-slate-900 font-black italic uppercase text-sm focus:border-blue-700 outline-none transition-all focus:bg-white" 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-4">Téléphone</label>
+                      <input 
+                        type="tel" 
+                        required
+                        value={auditForm.phone}
+                        onChange={(e) => setAuditForm({...auditForm, phone: e.target.value})}
+                        placeholder="+212 6XX XXX XXX" 
+                        className="w-full bg-slate-50 border border-slate-200 rounded-3xl px-8 py-5 text-slate-900 font-black italic uppercase text-sm focus:border-blue-700 outline-none transition-all focus:bg-white" 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-4">Votre Poste</label>
+                      <input 
+                        type="text" 
+                        value={auditForm.jobPosition}
+                        onChange={(e) => setAuditForm({...auditForm, jobPosition: e.target.value})}
+                        placeholder="CEO, Directeur, Gerente..." 
                         className="w-full bg-slate-50 border border-slate-200 rounded-3xl px-8 py-5 text-slate-900 font-black italic uppercase text-sm focus:border-blue-700 outline-none transition-all focus:bg-white" 
                       />
                     </div>
