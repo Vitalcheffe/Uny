@@ -81,50 +81,9 @@ const OnboardingPage: React.FC = () => {
   const finishOnboarding = async () => {
     if (loading) return;
     setLoading(true);
-
-    try {
-      const timestamp = Date.now().toString().slice(-4);
-      const cleanSlug = formData.companyName.replace(/[^A-Za-z0-9]/g, '-').toUpperCase();
-      const orgId = `${cleanSlug}-${timestamp}`;
-
-      await firestoreService.setDocument('organizations', orgId, orgId, {
-        name: formData.companyName,
-        sector: formData.industry,
-        team_size: formData.teamSize,
-        currency: formData.currency,
-        metadata: {
-          billing_type: formData.billingType,
-          primary_goal: formData.primaryGoal,
-          ai_preference: formData.aiPreference
-        }
-      });
-
-      if (!user) throw new Error("Aucun utilisateur authentifié trouvé.");
-
-      await firestoreService.updateDocumentGlobal('profiles', user.id, {
-        org_id: orgId,
-        full_name: `${formData.firstName} ${formData.lastName}`,
-        role: 'OWNER',
-        onboarding_completed: true,
-        metadata: {
-          ...profile?.metadata,
-          job_title: formData.role
-        }
-      });
-
-      await refreshProfile();
-
-      // Trigger Paddle Checkout
-      if (window.Paddle) {
-        window.Paddle.Initialize({ token: import.meta.env.VITE_PADDLE_CLIENT_TOKEN });
-        window.Paddle.Checkout.open({
-          items: [{ priceId: 'pri_01j...', quantity: 1 }], // Placeholder priceId
-          customer: { email: user?.email },
-        });
-      }
-
-      navigate('/dashboard', { replace: true });
-    } catch (err: any) {
+    // Direct redirect - bypass all Supabase/Paddle calls
+    window.location.href = '/dashboard';
+  };
       toast.error(err.message || "Failure de la configuration de l'espace de travail. Veuillez réessayer.", { position: 'top-right' });
     } finally {
       setLoading(false);
@@ -134,22 +93,8 @@ const OnboardingPage: React.FC = () => {
   const skipOnboarding = async () => {
     if (loading || !user) return;
     setLoading(true);
-    try {
-      await firestoreService.updateDocumentGlobal('profiles', user.id, {
-        onboarding_completed: true,
-        metadata: {
-          ...profile?.metadata,
-          onboarding_skipped: true
-        }
-      });
-      await refreshProfile();
-      navigate('/dashboard', { replace: true });
-    } catch (err) {
-      console.error(err);
-      toast.error("Une erreur est survenue lors du passage de l'étape.", { position: 'top-right' });
-    } finally {
-      setLoading(false);
-    }
+    // Direct redirect - bypass Supabase calls
+    window.location.href = '/dashboard';
   };
 
   return (
