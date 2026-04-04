@@ -95,8 +95,15 @@ const RootProtocol = () => {
   if (isLoading || !profileLoaded) return <GlobalLoader />;
   
   if (user) {
-    if (isSuperAdmin) return <Navigate to="/dashboard" replace />;
-    if (!profile?.organization_id && !isSuperAdmin) return <Navigate to="/onboarding" replace />;
+    // Super admin bypass tout - va directement au dashboard
+    if (isSuperAdmin || user.role === 'SUPER_ADMIN') {
+      return <Navigate to="/dashboard" replace />;
+    }
+    // Utilisateur normal sans org → onboarding
+    if (!profile?.organization_id) {
+      return <Navigate to="/onboarding" replace />;
+    }
+    // Tout va bien → dashboard
     return <Navigate to="/dashboard" replace />;
   }
   
@@ -113,7 +120,10 @@ function ProtectedRoute({ children }: { children?: React.ReactNode }) {
   if (isLoading || !profileLoaded) return <GlobalLoader />;
   if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
 
-  if (isSuperAdmin) return <>{children}</>;
+  // Super admin peut accéder à tout sans restriction
+  if (isSuperAdmin || user.role === 'SUPER_ADMIN') {
+    return <>{children}</>;
+  }
 
   const hasOrg = !!profile?.organization_id;
   const isAtOnboarding = location.pathname === '/onboarding' || location.pathname === '/onboarding/';
