@@ -286,7 +286,7 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white selection:bg-blue-600 selection:text-white overflow-x-hidden font-sans">
+    <div className="min-h-screen bg-white selection:bg-blue-600 selection:text-white overflow-x-hidden font-sans" style={{ touchAction: 'pan-y' }}>
       <CustomCursor />
       
       {/* Scroll Progress Bar */}

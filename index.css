@@ -20,6 +20,8 @@ body {
   color: #0F172A !important;
   font-family: var(--font-sans);
   overflow-x: hidden;
+  overflow-y: auto;
+  touch-action: pan-y;
 }
 
 .glow-button {
