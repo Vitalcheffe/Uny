@@ -165,7 +165,7 @@ export class DataService {
       console.log("KEY:", supabaseKey ? "exists" : "MISSING");
       
       if (!supabaseUrl || !supabaseKey) {
-        throw new Error("Missing Supabase config");
+        throw new Error("Configuration Supabase manquante. Veuillez vérifier les variables d'environnement VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY sur Vercel.");
       }
       
       const response = await fetch(`${supabaseUrl}/rest/v1/audit_requests`, {
@@ -190,7 +190,16 @@ export class DataService {
       if (!response.ok) {
         const errText = await response.text();
         console.error("Error response:", errText);
-        throw new Error(errText);
+        // Provide more helpful error based on status
+        if (response.status === 404) {
+          throw new Error("Table 'audit_requests' non trouvée. Exécutez les migrations Supabase: https://supabase.com/dashboard/project/_/sql");
+        } else if (response.status === 401 || response.status === 403) {
+          throw new Error("Permission refusée. Vérifiez les politiques RLS pour audit_requests.");
+        } else if (response.status >= 500) {
+          throw new Error("Erreur serveur Supabase. Veuillez vérifier que le projet Supabase est actif.");
+        } else {
+          throw new Error(errText || `Erreur ${response.status}: La demande n'a pas pu être envoyée.`);
+        }
       }
       
       console.log("SUCCESS!");
