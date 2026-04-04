@@ -96,7 +96,7 @@ const RootProtocol = () => {
   
   if (user) {
     if (isSuperAdmin) return <Navigate to="/dashboard" replace />;
-    if (!profile?.organization_id) return <Navigate to="/onboarding" replace />;
+    if (!profile?.organization_id && !isSuperAdmin) return <Navigate to="/onboarding" replace />;
     return <Navigate to="/dashboard" replace />;
   }
   
