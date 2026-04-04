@@ -209,5 +209,4 @@ export class DataService {
       return false;
     }
   }
-  }
 }
