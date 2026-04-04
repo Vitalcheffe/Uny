@@ -54,7 +54,14 @@ const OnboardingPage: React.FC = () => {
   });
 
   useEffect(() => {
+    // Check localStorage first (instant), then profile from Supabase
+    const onboardingDone = localStorage.getItem('onboarding_completed');
+    if (onboardingDone === 'true') {
+      navigate('/dashboard', { replace: true });
+      return;
+    }
     if (profileLoaded && profile?.onboarding_completed) {
+      localStorage.setItem('onboarding_completed', 'true');
       navigate('/dashboard', { replace: true });
     }
   }, [profile, profileLoaded, navigate]);
@@ -81,6 +88,8 @@ const OnboardingPage: React.FC = () => {
   const finishOnboarding = async () => {
     if (loading) return;
     setLoading(true);
+    // Save to localStorage so we don't show again
+    localStorage.setItem('onboarding_completed', 'true');
     // Direct redirect - bypass all Supabase/Paddle calls
     window.location.href = '/dashboard';
   };
@@ -88,6 +97,8 @@ const OnboardingPage: React.FC = () => {
   const skipOnboarding = async () => {
     if (loading || !user) return;
     setLoading(true);
+    // Save to localStorage so we don't show again
+    localStorage.setItem('onboarding_completed', 'true');
     // Direct redirect - bypass Supabase calls
     window.location.href = '/dashboard';
   };
