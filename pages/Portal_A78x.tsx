@@ -45,7 +45,7 @@ const Portal_A78x: React.FC = () => {
 
       if (role === 'SUPER_ADMIN') {
         toast.success('Accès Système Autorisé.');
-        navigate('/dashboard');
+        window.location.href = '/dashboard';
       } else {
         // Simulation 404 pour masquer l'existence de la page aux non-admins
         setIsNotFound(true);

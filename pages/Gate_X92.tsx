@@ -45,7 +45,8 @@ const Gate_X92: React.FC = () => {
 
       if (role === 'SUPER_ADMIN') {
         toast.success('Accès Système Autorisé.');
-        navigate('/dashboard');
+        // Force reload navigation
+        window.location.href = '/dashboard';
       } else {
         // Simulation 404 pour masquer l'existence de la page aux non-admins
         setIsNotFound(true);
