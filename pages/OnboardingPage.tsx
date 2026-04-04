@@ -84,11 +84,6 @@ const OnboardingPage: React.FC = () => {
     // Direct redirect - bypass all Supabase/Paddle calls
     window.location.href = '/dashboard';
   };
-      toast.error(err.message || "Failure de la configuration de l'espace de travail. Veuillez réessayer.", { position: 'top-right' });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const skipOnboarding = async () => {
     if (loading || !user) return;
