@@ -317,8 +317,15 @@ const LandingPage: React.FC = () => {
         </div>
 
         <motion.div 
-          style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-          className="relative z-10 max-w-7xl mx-auto text-center"
+          style={{ 
+            opacity: heroOpacity, 
+            scale: heroScale, 
+            y: heroY,
+            overflowX: 'hidden',
+            maxWidth: '100vw',
+            padding: '0 1.5rem'
+          }}
+          className="relative z-10 max-w-full mx-auto text-center"
         >
           <motion.div
             initial="hidden"
@@ -337,7 +344,12 @@ const LandingPage: React.FC = () => {
             
             <motion.h1 
               variants={slamInVariants}
-              className="text-7xl md:text-9xl lg:text-[180px] font-[950] text-white tracking-tighter mb-12 leading-[0.8] italic uppercase"
+              style={{ 
+                fontSize: 'clamp(2rem, 8vw, 6rem)',
+                wordBreak: 'break-word',
+                whiteSpace: 'normal'
+              }}
+              className="font-[950] text-white tracking-tighter mb-12 leading-[0.8] italic uppercase"
             >
               <span className="block">{t('hero.title1')}</span>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-600 to-blue-400 bg-[length:200%_auto] animate-gradient-x">
