@@ -18,6 +18,8 @@ export default function AuditsPage() {
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('pending');
+  const [selectedAudit, setSelectedAudit] = useState<AuditRequest | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   useEffect(() => {
@@ -258,7 +260,9 @@ export default function AuditsPage() {
             </thead>
             <tbody className="divide-y divide-[#E2E8F0]">
               {audits.filter(a => filter === 'all' || a.status === filter).map((audit) => (
-                <tr key={audit.id} className="hover:bg-slate-50">
+                <tr key={audit.id} 
+                 className="hover:bg-slate-50 cursor-pointer"
+                 onClick={() => { setSelectedAudit(audit); setDrawerOpen(true); }}
                   <td className="px-4 py-3 font-medium text-[#0A0A1A]">{audit.company_name}</td>
                   <td className="px-4 py-3 text-slate-600">{audit.email}</td>
                   <td className="px-4 py-3 text-slate-600">{audit.industry}</td>
@@ -304,6 +308,73 @@ export default function AuditsPage() {
           </table>
         )}
       </div>
+
+      {/* Detail Drawer */}
+      {drawerOpen && selectedAudit && (
+        <>
+          <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setDrawerOpen(false)} />
+          <div className="fixed right-0 top-0 bottom-0 w-[480px] bg-white shadow-2xl z-50 flex flex-col">
+            <div className="p-6 border-b border-[#E2E8F0] flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-[#0A0A1A]">{selectedAudit.company_name}</h2>
+              <button onClick={() => setDrawerOpen(false)} className="p-2 hover:bg-slate-100 rounded-lg">
+                <X className="w-5 h-5 text-slate-400" />
+              </button>
+            </div>
+            <div className="flex-1 p-6 overflow-y-auto space-y-4">
+              <div className="flex items-center gap-2">
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  selectedAudit.status === 'pending' ? 'bg-amber-100 text-amber-700' :
+                  selectedAudit.status === 'approved' ? 'bg-green-100 text-green-700' :
+                  'bg-red-100 text-red-700'
+                }`}>
+                  {selectedAudit.status === 'pending' ? 'En attente' : 
+                   selectedAudit.status === 'approved' ? 'Approuvé' : 'Rejeté'}
+                </span>
+              </div>
+              <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl space-y-3">
+                <p className="text-sm text-slate-500">📧 Email</p>
+                <p className="font-medium text-[#0A0A1A]">{selectedAudit.email}</p>
+              </div>
+              <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl space-y-3">
+                <p className="text-sm text-slate-500">📱 Téléphone</p>
+                <p className="font-medium text-[#0A0A1A]">{selectedAudit.phone || '-'}</p>
+              </div>
+              <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl space-y-3">
+                <p className="text-sm text-slate-500">🏢 Secteur</p>
+                <p className="font-medium text-[#0A0A1A]">{selectedAudit.industry || '-'}</p>
+              </div>
+              <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl space-y-3">
+                <p className="text-sm text-slate-500">👥 Taille</p>
+                <p className="font-medium text-[#0A0A1A]">{selectedAudit.team_size || '-'}</p>
+              </div>
+              <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl space-y-3">
+                <p className="text-sm text-slate-500">💼 Poste</p>
+                <p className="font-medium text-[#0A0A1A]">{selectedAudit.job_position || '-'}</p>
+              </div>
+              <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl space-y-3">
+                <p className="text-sm text-slate-500">📅 Soumis le</p>
+                <p className="font-medium text-[#0A0A1A]">{new Date(selectedAudit.created_at).toLocaleDateString('fr-FR')}</p>
+              </div>
+            </div>
+            {selectedAudit.status === 'pending' && (
+              <div className="p-6 border-t border-[#E2E8F0] space-y-3">
+                <button
+                  onClick={() => { handleApprove(selectedAudit.id); setDrawerOpen(false); }}
+                  className="w-full py-3 bg-[#10B981] text-white rounded-xl font-medium hover:bg-[#059669]"
+                >
+                  Approuver
+                </button>
+                <button
+                  onClick={() => { handleReject(selectedAudit.id); setDrawerOpen(false); }}
+                  className="w-full py-3 bg-[#EF4444] text-white rounded-xl font-medium hover:bg-[#DC2626]"
+                >
+                  Rejeter
+                </button>
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
