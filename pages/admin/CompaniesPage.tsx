@@ -39,6 +39,7 @@ export default function CompaniesPage() {
   const [activeTab, setActiveTab] = useState<'aperçu' | 'tokens' | 'utilisateurs' | 'paiements'>('aperçu');
   const [companyUsers, setCompanyUsers] = useState<User[]>([]);
   const [companyTransactions, setCompanyTransactions] = useState<Transaction[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchCompanies();
@@ -84,6 +85,7 @@ export default function CompaniesPage() {
     
     if (error) {
       console.error('[CompaniesPage] Error fetching organizations:', error);
+      setError(error.message);
     }
     
     if (data && data.length > 0) {
@@ -159,6 +161,13 @@ export default function CompaniesPage() {
 
   return (
     <div className="space-y-6">
+      {/* Error display */}
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          Erreur: {error}
+        </div>
+      )}
+      
       {/* Table */}
       <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-16px shadow-[0_1px_3px_rgba(0,0,0,0.08)] overflow-hidden">
         {loading ? (
