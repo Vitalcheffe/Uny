@@ -1,4 +1,4 @@
-// Simpler email send via Resend with better template
+// Email send via Resend with guaranteed working template
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
@@ -18,70 +18,67 @@ export default async function handler(req: any, res: any) {
     return res.status(500).json({ success: false, error: 'RESEND_API_KEY not configured' });
   }
 
-  // Ensure invite link goes to correct URL
-  const fullInviteLink = inviteLink?.startsWith('http') 
-    ? inviteLink 
-    : `${appUrl}/invite/${inviteLink}`;
+  // Build proper URL - ensure it's absolute
+  let fullUrl = inviteLink;
+  if (!inviteLink?.startsWith('http')) {
+    // It's just a token, build full URL
+    const token = inviteLink || '';
+    fullUrl = `${appUrl}/invite/${token}`;
+  }
+  
+  console.log('[Email] Final URL:', fullUrl);
 
-  console.log('[Email API] Sending to:', to);
-  console.log('[Email API] Invite link:', fullInviteLink);
+  // Hardcoded URL for guaranteed clickability
+  const hardcodedUrl = `https://uny-gamma.vercel.app/invite/${inviteLink || ''}`;
+  console.log('[Email] Hardcoded URL:', hardcodedUrl);
 
-  // Professional HTML email template
-  const htmlContent = `
+  // Professional email template (Notion/Linear style)
+  const html = `
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Votre accès UNY est prêt</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="x-apple-disable-message-reformatting">
 </head>
-<body style="margin:0; padding:0; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color:#f1f5f9;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;">
-    <tr>
-      <td align="center" style="padding:40px 20px;">
-        <!-- Logo -->
-        <div style="width:60px; height:60px; background:linear-gradient(135deg, #2563EB, #7C3AED); border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:24px;">
-          <span style="color:white; font-size:28px; font-weight:bold;">U</span>
-        </div>
-        
-        <!-- Main Card -->
-        <div style="max-width:480px; background:white; border-radius:20px; padding:40px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);">
-          <h1 style="margin:0 0 8px; font-size:28px; font-weight:700; color:#0f172a; text-align:center;">
-            Bienvenue sur UNY
-          </h1>
-          
-          <p style="margin:0 0 24px; font-size:16px; color:#475569; text-align:center; line-height:1.6;">
-            Votre espace de travail souverain pour <strong style="color:#0f172a;">${companyName}</strong> a été créé par notre équipe.
-          </p>
-          
-          <!-- CTA Button -->
-          <div style="text-align:center; margin:32px 0;">
-            <a href="${fullInviteLink}" style="display:inline-block; background:linear-gradient(135deg, #2563EB, #7C3AED); color:white; font-size:16px; font-weight:600; padding:16px 40px; border-radius:12px; text-decoration:none; box-shadow:0 4px 14px rgba(37,99,235,0.4);">
-              Créer mon compte →
-            </a>
-          </div>
-          
-          <!-- Info Box -->
-          <div style="background:#f8fafc; border-radius:12px; padding:16px; margin-top:24px;">
-            <p style="margin:0; font-size:14px; color:#64748b;">
-              <strong style="color:#0f172a;">Ce lien expire le ${expiresAt || 'dans 7 jours'}</strong>
-            </p>
-          </div>
-          
-          <!-- Footer -->
-          <p style="margin:32px 0 0; font-size:13px; color:#94a3b8; text-align:center; line-height:1.5;">
-            UNY — Sovereign Operating System for African Businesses<br>
-            <a href="${appUrl}" style="color:#2563EB; text-decoration:none;">${appUrl}</a>
-          </p>
-        </div>
-        
-        <!-- Spam Notice -->
-        <p style="margin:24px 0 0; font-size:12px; color:#94a3b8; text-align:center;">
-          Si vous ne trouvez pas cet email, vérifiez votre dossier spam.
-        </p>
-      </td>
-    </tr>
-  </table>
+<body style="margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; background:#F8FAFC;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFC;">
+<tr>
+<td align="center" style="padding:48px 16px;">
+<div style="max-width:560px; background:white; border-radius:8px; padding:48px; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+<!-- Logo -->
+<div style="text-align:center; margin-bottom:24px;">
+<span style="font-size:20px; font-weight:700; color:#000000;">UNY</span>
+</div>
+
+<!-- Divider -->
+<div style="border-top:1px solid #E2E8F0; margin:24px 0;"></div>
+
+<!-- Heading -->
+<h2 style="margin:0 0 16px; font-size:28px; font-weight:700; color:#0A0A1A; text-align:center;">Votre espace est prêt</h2>
+
+<!-- Body -->
+<p style="margin:0; font-size:16px; color:#64748B; line-height:1.6; text-align:center;">
+L'équipe UNY a activé votre espace de travail pour ${companyName}. Créez votre compte pour commencer.
+</p>
+
+<!-- Button -->
+<div style="text-align:center; margin:32px 0;">
+<a href="${hardcodedUrl}" style="display:inline-block; background:#0A0A1A; color:#ffffff; font-size:15px; font-weight:600; padding:14px 32px; border-radius:8px; text-decoration:none;">Créer mon compte →</a>
+</div>
+
+<!-- Expiry note -->
+<p style="margin:0; font-size:12px; color:#94A3B8; text-align:center;">Ce lien expire dans 7 jours.</p>
+
+<!-- Divider -->
+<div style="border-top:1px solid #E2E8F0; margin:24px 0;"></div>
+
+<!-- Footer -->
+<p style="margin:0; font-size:12px; color:#CBD5E1; text-align:center;">UNY • Sovereign AI for African Business</p>
+</div>
+</td>
+</tr>
+</table>
 </body>
 </html>
 `.trim();
@@ -94,24 +91,28 @@ export default async function handler(req: any, res: any) {
         'Authorization': `Bearer ${apiKey.trim()}`,
       },
       body: JSON.stringify({
-        from: 'UNY Team <team@resend.dev>',
+        from: 'UNY <onboarding@resend.dev>',
         to: to,
-        subject: `Votre accès UNY est prêt — ${companyName}`,
-        html: htmlContent,
+        reply_to: 'team@uny.ai',
+        subject: `Votre espace UNY est prêt pour ${companyName}`,
+        html: html,
+        headers: {
+          'List-Unsubscribe': '<mailto:team@uny.ai?subject=unsubscribe>',
+        },
       }),
     });
 
     const data = await response.json();
     
     if (!response.ok) {
-      console.error('[Email API] Resend error:', data);
+      console.error('Resend error:', data);
       return res.status(response.status).json({ success: false, error: data });
     }
 
-    console.log('[Email API] Sent successfully to:', to);
+    console.log('Email sent to:', to);
     return res.status(200).json({ success: true });
   } catch (error: any) {
-    console.error('[Email API] Error:', error);
+    console.error('Email error:', error);
     return res.status(500).json({ success: false, error: error?.toString?.() || String(error) });
   }
 }
