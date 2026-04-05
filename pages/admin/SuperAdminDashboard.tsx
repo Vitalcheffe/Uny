@@ -73,7 +73,7 @@ export default function SuperAdminDashboard() {
         .eq('status', 'PENDING')
         .order('created_at', { ascending: false });
       
-      if (requests) setPendingRequests(requests);
+      if (requests) setPendingRequests(requests as unknown as AuditRequest[]);
 
       // Fetch all companies
       const { data: orgs } = await supabase
@@ -81,7 +81,7 @@ export default function SuperAdminDashboard() {
         .select('*')
         .order('created_at', { ascending: false });
       
-      if (orgs) setCompanies(orgs);
+      if (orgs) setCompanies(orgs as unknown as Company[]);
 
       // Calculate stats
       const activeOrgs = orgs?.filter(o => o.subscription_status === 'active' || o.subscription_status === 'trialing').length || 0;
