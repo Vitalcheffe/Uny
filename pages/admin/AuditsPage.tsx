@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ClipboardCheck, Check, X, AlertCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { sendInvitationEmail } from '../../lib/email-simple';
+// Email will be sent via API endpoint
 
 interface AuditRequest {
   id: string;
@@ -118,18 +118,27 @@ export default function AuditsPage() {
       
       const inviteUrl = `${window.location.origin}/invite/${inviteToken}`;
       
-      // Send invitation email
-      const emailResult = await sendInvitationEmail({
-        to: auditRequest.email,
-        companyName: orgName,
-        inviteLink: inviteUrl,
-        expiresAt: new Date(inviteExpiry).toLocaleDateString('fr-FR')
-      });
-      
-      if (emailResult.success) {
-        setToast({ message: `Demande approuvée! Email envoyé à ${auditRequest.email}`, type: 'success' });
-      } else {
-        setToast({ message: `Demande approuvée! Email non envoyé: ${emailResult.error}`, type: 'error' });
+      // Send invitation email via API
+      try {
+        const emailRes = await fetch('/api/send-invite', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: auditRequest.email,
+            companyName: orgName,
+            inviteLink: inviteUrl,
+            expiresAt: new Date(inviteExpiry).toLocaleDateString('fr-FR')
+          })
+        });
+        const emailResult = await emailRes.json();
+        
+        if (emailResult.success) {
+          setToast({ message: `Demande approuvée! Email envoyé à ${auditRequest.email}`, type: 'success' });
+        } else {
+          setToast({ message: `Demande approuvée! Email non envoyé: ${emailResult.error}`, type: 'error' });
+        }
+      } catch (emailErr: any) {
+        setToast({ message: `Demande approuvée! Email erreur: ${emailErr.message}`, type: 'error' });
       }
     } else {
       setToast({ message: `Demande approuvée - Entreprise "${orgName}" créée!`, type: 'success' });
