@@ -99,12 +99,12 @@ export default function CompaniesPage() {
         return {
           id: org.id,
           name: org.name,
-          plan: org.subscription_tier || 'Free',
+          plan: org.plan || 'Free',
           users_count: count || 0,
           tokens_this_month: org.tokens_used_this_month || 0,
           last_active: org.updated_at || org.created_at,
           revenue: org.total_revenue || 0,
-          status: org.subscription_status === 'active' ? 'active' : 'suspended',
+          status: org.active === 'active' ? 'active' : 'suspended',
           created_at: org.created_at
         };
       }));
@@ -135,7 +135,7 @@ export default function CompaniesPage() {
     
     const { error } = await (supabase
       .from('organizations' as any)
-      .update({ subscription_status: newStatus })
+      .update({ active: newStatus })
       .eq('id', selectedCompany.id) as any);
 
     if (!error) {

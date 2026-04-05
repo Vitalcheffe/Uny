@@ -71,8 +71,8 @@ export default function AuditsPage() {
       .from('organizations' as any)
       .insert({
         name: auditRequest.company_name,
-        subscription_tier: 'Free',
-        subscription_status: 'active',
+        plan: 'Free',
+        active: 'active',
         created_at: new Date().toISOString()
       }) as any);
     
