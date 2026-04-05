@@ -14,6 +14,7 @@ interface AuditRequest {
 
 export default function AuditsPage() {
   const [audits, setAudits] = useState<AuditRequest[]>([]);
+  const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
@@ -23,13 +24,30 @@ export default function AuditsPage() {
 
   const fetchAudits = async () => {
     setLoading(true);
-    const { data, error } = await (supabase
+    
+    // Fetch all audit requests
+    const { data: allData } = await (supabase
+      .from('audit_requests' as any)
+      .select('status') as any);
+    
+    // Fetch pending requests
+    const { data: pendingData } = await (supabase
       .from('audit_requests' as any)
       .select('*')
+      .eq('status', 'pending')
       .order('created_at', { ascending: false }) as any);
     
-    if (!error && data) {
-      setAudits(data);
+    if (allData) {
+      setStats({
+        total: allData.length,
+        pending: pendingData?.length || 0,
+        approved: allData.filter((a: any) => a.status === 'approved').length,
+        rejected: allData.filter((a: any) => a.status === 'rejected').length
+      });
+    }
+    
+    if (pendingData) {
+      setAudits(pendingData);
     }
     setLoading(false);
   };
@@ -41,7 +59,7 @@ export default function AuditsPage() {
       .eq('id', id) as any);
 
     if (!error) {
-      setAudits(audits.filter(a => a.id !== id));
+      await fetchAudits();
       setToast({ message: 'Demande approuvée', type: 'success' });
     } else {
       setToast({ message: 'Erreur lors de l\'approbation', type: 'error' });
@@ -56,19 +74,12 @@ export default function AuditsPage() {
       .eq('id', id) as any);
 
     if (!error) {
-      setAudits(audits.filter(a => a.id !== id));
+      await fetchAudits();
       setToast({ message: 'Demande rejetée', type: 'success' });
     } else {
       setToast({ message: 'Erreur lors du rejet', type: 'error' });
     }
     setTimeout(() => setToast(null), 3000);
-  };
-
-  const stats = {
-    total: audits.length + 10,
-    pending: audits.length,
-    approved: 8,
-    rejected: 2
   };
 
   const formatDate = (date: string) => {

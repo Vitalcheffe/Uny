@@ -37,10 +37,39 @@ export default function CompaniesPage() {
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'aperçu' | 'tokens' | 'utilisateurs' | 'paiements'>('aperçu');
+  const [companyUsers, setCompanyUsers] = useState<User[]>([]);
+  const [companyTransactions, setCompanyTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
     fetchCompanies();
   }, []);
+
+  useEffect(() => {
+    if (selectedCompany) {
+      fetchCompanyDetails(selectedCompany.id);
+    }
+  }, [selectedCompany]);
+
+  const fetchCompanyDetails = async (orgId: string) => {
+    // Fetch users for this organization
+    const { data: usersData } = await (supabase
+      .from('profiles' as any)
+      .select('*')
+      .eq('organization_id', orgId) as any);
+    
+    if (usersData) {
+      setCompanyUsers(usersData.map((p: any) => ({
+        id: p.id,
+        full_name: p.full_name || 'Sans nom',
+        email: p.email || '',
+        role: p.role || 'Membre',
+        created_at: p.created_at
+      })));
+    }
+    
+    // TODO: Fetch real transactions when you have a payments table
+    setCompanyTransactions([]);
+  };
 
   const fetchCompanies = async () => {
     setLoading(true);
@@ -50,17 +79,27 @@ export default function CompaniesPage() {
       .order('created_at', { ascending: false }) as any);
     
     if (!error && data) {
-      setCompanies(data.map((org: any) => ({
-        id: org.id,
-        name: org.name,
-        plan: org.subscription_status || 'Free',
-        users_count: 0,
-        tokens_this_month: Math.floor(Math.random() * 10000),
-        last_active: org.updated_at || org.created_at,
-        revenue: Math.floor(Math.random() * 5000) + 500,
-        status: org.subscription_status === 'active' ? 'active' : 'suspended',
-        created_at: org.created_at
-      })));
+      // Fetch user count for each organization
+      const companiesWithCounts = await Promise.all(data.map(async (org: any) => {
+        const { count } = await (supabase
+          .from('profiles' as any)
+          .select('*', { count: 'exact', head: true })
+          .eq('organization_id', org.id) as any);
+        
+        return {
+          id: org.id,
+          name: org.name,
+          plan: org.subscription_tier || 'Free',
+          users_count: count || 0,
+          tokens_this_month: org.tokens_used_this_month || 0,
+          last_active: org.updated_at || org.created_at,
+          revenue: org.total_revenue || 0,
+          status: org.subscription_status === 'active' ? 'active' : 'suspended',
+          created_at: org.created_at
+        };
+      }));
+      
+      setCompanies(companiesWithCounts);
     }
     setLoading(false);
   };
@@ -93,23 +132,10 @@ export default function CompaniesPage() {
     }
   };
 
-  // Mock data for demo
-  const mockTokensData = Array.from({ length: 30 }, (_, i) => ({
-    day: `J${i + 1}`,
-    tokens: Math.floor(Math.random() * 500) + 100
-  }));
-
-  const mockUsers: User[] = [
-    { id: '1', full_name: 'Jean Dupont', email: 'jean@company.com', role: 'Admin', created_at: '2024-01-15' },
-    { id: '2', full_name: 'Marie Martin', email: 'marie@company.com', role: 'Membre', created_at: '2024-02-20' },
-    { id: '3', full_name: 'Pierre Durant', email: 'pierre@company.com', role: 'Membre', created_at: '2024-03-10' },
-  ];
-
-  const mockTransactions: Transaction[] = [
-    { id: '1', amount: 299, date: '2024-04-01', description: 'Abonnement Premium - Avril', status: 'paid' },
-    { id: '2', amount: 299, date: '2024-03-01', description: 'Abonnement Premium - Mars', status: 'paid' },
-    { id: '3', amount: 299, date: '2024-02-01', description: 'Abonnement Premium - Février', status: 'paid' },
-  ];
+  // TODO: Fetch real token usage data when you have a tokens table
+  const tokenUsageData = selectedCompany ? [
+    { day: '1', tokens: selectedCompany.tokens_this_month || 0 }
+  ] : [];
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('fr-FR', {
@@ -256,7 +282,7 @@ export default function CompaniesPage() {
                   <h3 className="font-medium text-[#0A0A1A]">Utilisation des tokens (30 derniers jours)</h3>
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={mockTokensData}>
+                      <BarChart data={tokenUsageData}>
                         <XAxis dataKey="day" tick={{ fontSize: 10 }} />
                         <YAxis tick={{ fontSize: 10 }} />
                         <Tooltip />
@@ -269,7 +295,7 @@ export default function CompaniesPage() {
 
               {activeTab === 'utilisateurs' && (
                 <div className="space-y-3">
-                  {mockUsers.map((user) => (
+                  {companyUsers.map((user) => (
                     <div key={user.id} className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl flex items-center justify-between">
                       <div>
                         <p className="font-medium text-[#0A0A1A]">{user.full_name}</p>
@@ -283,7 +309,7 @@ export default function CompaniesPage() {
 
               {activeTab === 'paiements' && (
                 <div className="space-y-3">
-                  {mockTransactions.map((tx) => (
+                  {companyTransactions.map((tx) => (
                     <div key={tx.id} className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl flex items-center justify-between">
                       <div>
                         <p className="font-medium text-[#0A0A1A]">{tx.description}</p>

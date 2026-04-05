@@ -24,31 +24,30 @@ export default function UsersPage() {
   const fetchUsers = async () => {
     setLoading(true);
     
-    // Fetch users with organization info
-    const { data: usersData, error: usersError } = await (supabase
-      .from('users' as any)
-      .select('id, email, role, created_at')
+    // Fetch all profiles (not auth.users for security)
+    const { data: profilesData, error } = await (supabase
+      .from('profiles' as any)
+      .select('*')
       .order('created_at', { ascending: false }) as any);
 
-    if (!usersError && usersData) {
-      // For demo, create mock data with profiles
-      setUsers(usersData.map((u: any, idx: number) => ({
-        id: u.id,
-        full_name: `User ${idx + 1}`,
-        email: u.email,
-        organization_id: null,
-        organization_name: 'Aucune',
-        role: u.role || 'USER',
-        created_at: u.created_at,
-        status: 'active' as const
+    if (!error && profilesData) {
+      // Fetch organization names
+      const { data: orgsData } = await (supabase
+        .from('organizations' as any)
+        .select('id, name') as any);
+      
+      const orgMap = new Map((orgsData || []).map((o: any) => [o.id, o.name]));
+      
+      setUsers(profilesData.map((p: any) => ({
+        id: p.id,
+        full_name: p.full_name,
+        email: p.email || '',
+        organization_id: p.organization_id,
+        organization_name: orgMap.get(p.organization_id) || 'Aucune',
+        role: p.role || 'USER',
+        created_at: p.created_at,
+        status: p.is_active !== false ? 'active' as const : 'inactive' as const
       })));
-    } else {
-      // Mock data for demo
-      setUsers([
-        { id: '1', full_name: 'Jean Dupont', email: 'jean@company.com', organization_id: 'org1', organization_name: 'Acme Corp', role: 'ADMIN', created_at: '2024-01-15', status: 'active' },
-        { id: '2', full_name: 'Marie Martin', email: 'marie@company.com', organization_id: 'org1', organization_name: 'Acme Corp', role: 'USER', created_at: '2024-02-20', status: 'active' },
-        { id: '3', full_name: 'Pierre Durant', email: 'pierre@other.com', organization_id: 'org2', organization_name: 'Beta Inc', role: 'USER', created_at: '2024-03-10', status: 'active' },
-      ]);
     }
     setLoading(false);
   };
