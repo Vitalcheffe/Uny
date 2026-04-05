@@ -73,12 +73,20 @@ export default function CompaniesPage() {
 
   const fetchCompanies = async () => {
     setLoading(true);
+    console.log('[CompaniesPage] Fetching organizations...');
+    
     const { data, error } = await (supabase
       .from('organizations' as any)
       .select('*')
       .order('created_at', { ascending: false }) as any);
     
-    if (!error && data) {
+    console.log('[CompaniesPage] Organizations response:', { count: data?.length, error });
+    
+    if (error) {
+      console.error('[CompaniesPage] Error fetching organizations:', error);
+    }
+    
+    if (data && data.length > 0) {
       // Fetch user count for each organization
       const companiesWithCounts = await Promise.all(data.map(async (org: any) => {
         const { count } = await (supabase
@@ -99,7 +107,11 @@ export default function CompaniesPage() {
         };
       }));
       
+      console.log('[CompaniesPage] Processed companies:', companiesWithCounts.length);
       setCompanies(companiesWithCounts);
+    } else {
+      console.log('[CompaniesPage] No organizations found');
+      setCompanies([]);
     }
     setLoading(false);
   };
