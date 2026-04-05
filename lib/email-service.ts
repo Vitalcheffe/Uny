@@ -105,8 +105,8 @@ export async function sendInvitationEmail({
 
     if (!response.ok) {
       const error = await response.text();
-      console.error('[Email Service] Resend error:', error);
-      return { success: false, error: 'Failed to send email' };
+      console.error('[Email Service] Resend error:', response.status, error);
+      return { success: false, error: `Resend error ${response.status}: ${error}` };
     }
 
     return { success: true };
