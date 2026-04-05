@@ -186,7 +186,7 @@ export class DataService {
           job_position: payload.job_position || '',
           team_size: payload.team_size || '1-10',
           industry: payload.industry || 'TECH',
-          status: 'PENDING'
+          status: 'pending'
         })
       });
 
