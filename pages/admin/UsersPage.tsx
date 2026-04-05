@@ -81,6 +81,7 @@ export default function UsersPage() {
                 <th className="text-left px-4 py-3 text-sm font-medium text-slate-600">Rôle</th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-slate-600">Créé le</th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-slate-600">Statut</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-slate-600">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E2E8F0]">
@@ -106,6 +107,18 @@ export default function UsersPage() {
                     }`}>
                       {user.status === 'active' ? 'Actif' : 'Inactif'}
                     </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => {
+                        if (confirm(`Se connecter en tant que ${user.email}?`)) {
+                          alert(' Magic link sera envoyé à cet email');
+                        }
+                      }}
+                      className="px-3 py-1.5 bg-[#2563EB] text-white rounded-lg text-xs font-medium hover:bg-[#1D4ED8]"
+                    >
+                      Login
+                    </button>
                   </td>
                 </tr>
               ))}

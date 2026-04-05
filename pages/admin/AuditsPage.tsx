@@ -61,18 +61,30 @@ export default function AuditsPage() {
     }
     
     // Create organization from the audit request
+    const orgName = auditRequest.company_name?.trim();
+    if (!orgName) {
+      setToast({ message: 'Nom d\'entreprise manquant', type: 'error' });
+      setTimeout(() => setToast(null), 3000);
+      return;
+    }
+    
     const { error: orgError } = await (supabase
       .from('organizations' as any)
       .insert({
-        name: auditRequest.company_name,
-        plan: 'Free',
-        active: 'active',
+        name: orgName,
+        plan: 'starter',
+        sector: auditRequest.sector || '',
+        team_size: auditRequest.size || '',
         created_at: new Date().toISOString()
       }) as any);
     
     if (orgError) {
       console.error('Error creating organization:', orgError);
+      // Try to continue anyway if org exists
     }
+    
+    // Refresh companies list after creating
+    window.location.reload(); // Force refresh to show new company
     
     // Update audit request status
     const { error } = await (supabase
