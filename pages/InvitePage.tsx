@@ -26,14 +26,14 @@ export default function InvitePage() {
 
   const validateInvitation = async (inviteToken: string) => {
     try {
-      const { data, error } = await supabase
-        .from('auth_invitations')
+      const { data, error } = await (supabase
+        .from('auth_invitations' as any)
         .select('*, organizations(name)')
         .eq('invite_token', inviteToken)
         .eq('status', 'PENDING')
-        .single();
+        .single() as any);
 
-      if (data && new Date(data.expires_at) > new Date()) {
+      if (data && new Date(data.expires_at as string) > new Date()) {
         setInvitation(data);
         setValid(true);
       } else {
@@ -77,10 +77,10 @@ export default function InvitePage() {
       if (authError) throw authError;
 
       // 2. Update invitation status
-      await supabase
-        .from('auth_invitations')
+      await (supabase
+        .from('auth_invitations' as any)
         .update({ status: 'USED' })
-        .eq('id', invitation.id);
+        .eq('id', invitation.id) as any);
 
       // 3. Create profile
       await supabase
