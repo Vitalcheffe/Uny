@@ -260,10 +260,8 @@ export default function AuditsPage() {
             </thead>
             <tbody className="divide-y divide-[#E2E8F0]">
               {audits.filter(a => filter === 'all' || a.status === filter).map((audit) => (
-                <tr key={audit.id} 
-                 className="hover:bg-slate-50 cursor-pointer"
-                 onClick={() => { setSelectedAudit(audit); setDrawerOpen(true); }}
-                  <td className="px-4 py-3 font-medium text-[#0A0A1A]">{audit.company_name}</td>
+                <tr key={audit.id} className="hover:bg-slate-50 cursor-pointer">
+                  <td className="px-4 py-3 font-medium text-[#0A0A1A] cursor-pointer" onClick={() => { setSelectedAudit(audit); setDrawerOpen(true); }}>{audit.company_name}</td>
                   <td className="px-4 py-3 text-slate-600">{audit.email}</td>
                   <td className="px-4 py-3 text-slate-600">{audit.industry}</td>
                   <td className="px-4 py-3 text-slate-600">{audit.team_size}</td>
