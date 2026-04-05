@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ClipboardCheck, Check, X, AlertCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { sendInvitationEmail } from '../../lib/email-service';
 
 interface AuditRequest {
   id: string;
@@ -114,6 +115,14 @@ export default function AuditsPage() {
         }) as any);
       
       const inviteUrl = `${window.location.origin}/invite/${inviteToken}`;
+      
+      // Send invitation email
+      await sendInvitationEmail({
+        to: auditRequest.email,
+        companyName: orgName,
+        inviteLink: inviteUrl,
+        expiresAt: new Date(inviteExpiry).toLocaleDateString('fr-FR')
+      });
       
       setToast({ 
         message: `Demande approuvée! Email envoyé à ${auditRequest.email}`, 
