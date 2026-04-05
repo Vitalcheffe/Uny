@@ -156,9 +156,9 @@ const App: React.FC = () => {
           
           {/* Super Admin Dashboard */}
           <Route path="/dashboard" element={
-            <UserRoute>
+            <SuperAdminRoute>
               <SuperAdminLayout />
-            </UserRoute>
+            </SuperAdminRoute>
           }>
             <Route path="audits" element={
               <SuperAdminRoute>
