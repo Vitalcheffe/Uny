@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import InvitePage from './pages/InvitePage';
 import Portal_A78x from './pages/Portal_A78x';
 import Gate_X92 from './pages/Gate_X92';
@@ -143,6 +144,7 @@ const App: React.FC = () => {
         <Routes location={location}>
           <Route path="/" element={<RootProtocol />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
           <Route path="/invite/:token" element={<InvitePage />} />
           <Route path="/invite/:token/" element={<InvitePage />} />
           <Route path="/Portal_A78x" element={<Portal_A78x />} />
