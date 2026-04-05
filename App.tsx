@@ -1,55 +1,31 @@
-
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
 import LandingPage from './pages/LandingPage';
-import DashboardHome from './pages/DashboardHome';
 import LoginPage from './pages/LoginPage';
 import InvitePage from './pages/InvitePage';
 import Portal_A78x from './pages/Portal_A78x';
 import Gate_X92 from './pages/Gate_X92';
 import OnboardingPage from './pages/OnboardingPage';
-import MainDashboard from './layouts/MainDashboard';
-import TrialLockOverlay from './components/TrialLockOverlay';
+import SuperAdminLayout from './layouts/SuperAdminLayout';
+import UserLayout from './layouts/UserLayout';
 import SpotlightSearch from './components/SpotlightSearch';
+import TrialLockOverlay from './components/TrialLockOverlay';
 import { useAuth } from './context/AuthContext';
 
-const NexusChatPage = lazy(() => import('./pages/NexusChatPage'));
-const ClientsPage = lazy(() => import('./pages/ClientsPage'));
-const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
-const TeamPage = lazy(() => import('./pages/TeamPage'));
-const MindMapPage = lazy(() => import('./pages/MindMapPage'));
-const SettingsPage = lazy(() => import('./pages/SettingsPage'));
-const FinanceTresorerie = lazy(() => import('./pages/FinanceTresorerie'));
-const TelemetryCenter = lazy(() => import('./pages/TelemetryCenter'));
-const TimeTrackingPage = lazy(() => import('./pages/TimeTrackingPage'));
-const ContractsPage = lazy(() => import('./pages/ContractsPage'));
-const InvoicesPage = lazy(() => import('./pages/InvoicesPage'));
-const StrategyHub = lazy(() => import('./pages/StrategyHub'));
-const DocumentsPage = lazy(() => import('./pages/DocumentsPage'));
-const AuditLedgerPage = lazy(() => import('./pages/AuditLedgerPage'));
-const BillingPage = lazy(() => import('./pages/BillingPage'));
-const KnowledgeRegistry = lazy(() => import('./pages/KnowledgeRegistry'));
-const KnowledgeHub = lazy(() => import('./pages/KnowledgeHub'));
-const SupabaseTodoPage = lazy(() => import('./pages/SupabaseTodoPage'));
-const PIIMonitor = lazy(() => import('./components/admin/PIIMonitor'));
-const CompaniesMaster = lazy(() => import('./pages/admin/CompaniesMaster'));
-const BillingControl = lazy(() => import('./pages/admin/BillingControl'));
-const GlobalAudit = lazy(() => import('./pages/admin/GlobalAudit'));
-const AdminAuditRequests = lazy(() => import('./pages/admin/AdminAuditRequests'));
-const SuperAdminDashboard = lazy(() => import('./pages/admin/SuperAdminDashboard'));
+// Super Admin Pages
+const AuditsPage = lazy(() => import('./pages/admin/AuditsPage'));
+const CompaniesPage = lazy(() => import('./pages/admin/CompaniesPage'));
+const UsersPage = lazy(() => import('./pages/admin/UsersPage'));
+const SuperSettingsPage = lazy(() => import('./pages/admin/SettingsPage'));
 
-/**
- * Super Admin route guard.
- */
-function SuperAdminRoute({ children }: { children?: React.ReactNode }) {
-  const { isSuperAdmin, isLoading, profileLoaded } = useAuth();
-
-  if (isLoading || !profileLoaded) return <GlobalLoader />;
-  if (!isSuperAdmin) return <Navigate to="/dashboard" replace />;
-
-  return <>{children}</>;
-}
+// User Pages
+const HomePage = lazy(() => import('./pages/dashboard/HomePage'));
+const ChatPage = lazy(() => import('./pages/dashboard/ChatPage'));
+const DocumentsPage = lazy(() => import('./pages/dashboard/DocumentsPage'));
+const ProjectsPage = lazy(() => import('./pages/dashboard/ProjectsPage'));
+const TeamPage = lazy(() => import('./pages/dashboard/TeamPage'));
+const BillingPage = lazy(() => import('./pages/dashboard/BillingPage'));
 
 /**
  * CORE HUD LOADER - SYSTEM INITIALIZATION
@@ -96,15 +72,12 @@ const RootProtocol = () => {
   if (isLoading || !profileLoaded) return <GlobalLoader />;
   
   if (user) {
-    // Super admin bypass tout - va directement au dashboard
     if (isSuperAdmin || user.role === 'SUPER_ADMIN') {
       return <Navigate to="/dashboard" replace />;
     }
-    // Utilisateur normal sans org → onboarding
     if (!profile?.organization_id) {
       return <Navigate to="/onboarding" replace />;
     }
-    // Tout va bien → dashboard
     return <Navigate to="/dashboard" replace />;
   }
   
@@ -112,25 +85,37 @@ const RootProtocol = () => {
 };
 
 /**
- * PROTECTED ROUTE PROTOCOL v5.0 (Atomic Isolation)
+ * SUPER ADMIN ROUTE - Redirects non-super-admins to /app
  */
-function ProtectedRoute({ children }: { children?: React.ReactNode }) {
+function SuperAdminRoute({ children }: { children?: React.ReactNode }) {
+  const { user, isLoading, profileLoaded, isSuperAdmin } = useAuth();
+
+  if (isLoading || !profileLoaded) return <GlobalLoader />;
+  if (!isSuperAdmin && user?.role !== 'SUPER_ADMIN') return <Navigate to="/app" replace />;
+
+  return <>{children}</>;
+}
+
+/**
+ * USER ROUTE - Redirects super admins to /dashboard
+ */
+function UserRoute({ children }: { children?: React.ReactNode }) {
   const { user, profile, isLoading, profileLoaded, isSuperAdmin } = useAuth();
   const location = useLocation();
 
   if (isLoading || !profileLoaded) return <GlobalLoader />;
   if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
-
-  // Super admin peut accéder à tout sans restriction
+  
+  // Super admins go to their dashboard
   if (isSuperAdmin || user.role === 'SUPER_ADMIN') {
-    return <>{children}</>;
+    return <Navigate to="/dashboard" replace />;
   }
 
   const hasOrg = !!profile?.organization_id;
   const isAtOnboarding = location.pathname === '/onboarding' || location.pathname === '/onboarding/';
 
   if (!hasOrg && !isAtOnboarding) return <Navigate to="/onboarding" replace />;
-  if (hasOrg && isAtOnboarding) return <Navigate to="/dashboard" replace />;
+  if (hasOrg && isAtOnboarding) return <Navigate to="/app" replace />;
 
   return <>{children}</>;
 }
@@ -143,15 +128,10 @@ const CatchAllRoute = () => {
 const App: React.FC = () => {
   const location = useLocation();
 
-  // 🛡️ [Security] Verification of Supabase Client Configuration
   React.useEffect(() => {
     const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-    const isDev = import.meta.env.DEV;
-    
     if (anonKey && anonKey.length > 20) {
-      // Supabase ANON_KEY detected and valid for public forms.
-    } else {
-      // Supabase ANON_KEY is missing or invalid. Public forms will fail.
+      // Supabase ANON_KEY detected and valid
     }
   }, []);
 
@@ -167,81 +147,58 @@ const App: React.FC = () => {
           <Route path="/invite/:token/" element={<InvitePage />} />
           <Route path="/Portal_A78x" element={<Portal_A78x />} />
           <Route path="/Gate_X92" element={<Gate_X92 />} />
-          <Route path="/supabase-todos" element={<SupabaseTodoPage />} />
           
           <Route path="/onboarding" element={
-            <ProtectedRoute>
+            <UserRoute>
               <OnboardingPage />
-            </ProtectedRoute>
+            </UserRoute>
           } />
           
+          {/* Super Admin Dashboard */}
           <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <MainDashboard />
-            </ProtectedRoute>
+            <UserRoute>
+              <SuperAdminLayout />
+            </UserRoute>
           }>
-            <Route index element={<DashboardHome />} />
-            <Route path="chat" element={<NexusChatPage />} />
-            <Route path="clients" element={<ClientsPage />} />
+            <Route path="audits" element={
+              <SuperAdminRoute>
+                <AuditsPage />
+              </SuperAdminRoute>
+            } />
+            <Route path="companies" element={
+              <SuperAdminRoute>
+                <CompaniesPage />
+              </SuperAdminRoute>
+            } />
+            <Route path="users" element={
+              <SuperAdminRoute>
+                <UsersPage />
+              </SuperAdminRoute>
+            } />
+            <Route path="settings" element={
+              <SuperAdminRoute>
+                <SuperSettingsPage />
+              </SuperAdminRoute>
+            } />
+            <Route index element={
+              <SuperAdminRoute>
+                <AuditsPage />
+              </SuperAdminRoute>
+            } />
+          </Route>
+
+          {/* User Dashboard */}
+          <Route path="/app" element={
+            <UserRoute>
+              <UserLayout />
+            </UserRoute>
+          }>
+            <Route index element={<HomePage />} />
+            <Route path="chat" element={<ChatPage />} />
+            <Route path="documents" element={<DocumentsPage />} />
             <Route path="projects" element={<ProjectsPage />} />
             <Route path="team" element={<TeamPage />} />
-            <Route path="mindmap" element={<MindMapPage />} />
-            <Route path="time" element={<TimeTrackingPage />} />
-            <Route path="documents" element={<DocumentsPage />} />
-            <Route path="knowledge" element={<KnowledgeRegistry />} />
-            <Route path="knowledge-hub" element={<KnowledgeHub />} />
-            <Route path="tools/treasury" element={<FinanceTresorerie />} />
-            <Route path="tools/invoices" element={<InvoicesPage />} />
-            <Route path="tools/contracts" element={<ContractsPage />} />
-            <Route path="tools/strategy" element={<StrategyHub />} />
             <Route path="billing" element={<BillingPage />} />
-            
-            {/* Admin Routes */}
-            <Route path="admin/telemetry" element={
-              <SuperAdminRoute>
-                <TelemetryCenter />
-              </SuperAdminRoute>
-            } />
-            <Route path="admin/settings" element={
-              <SuperAdminRoute>
-                <SettingsPage />
-              </SuperAdminRoute>
-            } />
-            <Route path="admin/audit" element={
-              <SuperAdminRoute>
-                <AuditLedgerPage />
-              </SuperAdminRoute>
-            } />
-            <Route path="admin/pii" element={
-              <SuperAdminRoute>
-                <PIIMonitor />
-              </SuperAdminRoute>
-            } />
-            <Route path="admin/companies" element={
-              <SuperAdminRoute>
-                <CompaniesMaster />
-              </SuperAdminRoute>
-            } />
-            <Route path="admin/billing-control" element={
-              <SuperAdminRoute>
-                <BillingControl />
-              </SuperAdminRoute>
-            } />
-            <Route path="admin/global-audit" element={
-              <SuperAdminRoute>
-                <GlobalAudit />
-              </SuperAdminRoute>
-            } />
-            <Route path="admin/super" element={
-              <SuperAdminRoute>
-                <SuperAdminDashboard />
-              </SuperAdminRoute>
-            } />
-            <Route path="admin/audit-requests" element={
-              <SuperAdminRoute>
-                <AdminAuditRequests />
-              </SuperAdminRoute>
-            } />
           </Route>
           
           <Route path="*" element={<CatchAllRoute />} />
