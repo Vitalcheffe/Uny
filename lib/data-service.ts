@@ -158,6 +158,7 @@ export class DataService {
     job_position?: string;
     team_size?: string;
     industry?: string;
+    annual_revenue?: string;
   }): Promise<boolean> {
     try {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
