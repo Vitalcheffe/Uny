@@ -25,29 +25,22 @@ export default function AuditsPage() {
   const fetchAudits = async () => {
     setLoading(true);
     
-    // Fetch all audit requests
-    const { data: allData } = await (supabase
-      .from('audit_requests' as any)
-      .select('status') as any);
-    
-    // Fetch pending requests
-    const { data: pendingData } = await (supabase
+    // Fetch ALL audit requests (pending, approved, rejected)
+    const { data: allRequests } = await (supabase
       .from('audit_requests' as any)
       .select('*')
-      .eq('status', 'pending')
       .order('created_at', { ascending: false }) as any);
     
-    if (allData) {
+    if (allRequests) {
       setStats({
-        total: allData.length,
-        pending: pendingData?.length || 0,
-        approved: allData.filter((a: any) => a.status === 'approved').length,
-        rejected: allData.filter((a: any) => a.status === 'rejected').length
+        total: allRequests.length,
+        pending: allRequests.filter((a: any) => a.status === 'pending').length,
+        approved: allRequests.filter((a: any) => a.status === 'approved').length,
+        rejected: allRequests.filter((a: any) => a.status === 'rejected').length
       });
-    }
-    
-    if (pendingData) {
-      setAudits(pendingData);
+      
+      // Show only pending in table
+      setAudits(allRequests.filter((a: any) => a.status === 'pending'));
     }
     setLoading(false);
   };
