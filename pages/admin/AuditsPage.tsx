@@ -60,7 +60,6 @@ export default function AuditsPage() {
       return;
     }
     
-    // Create organization from the audit request
     const orgName = auditRequest.company_name?.trim();
     if (!orgName) {
       setToast({ message: 'Nom d\'entreprise manquant', type: 'error' });
@@ -68,23 +67,33 @@ export default function AuditsPage() {
       return;
     }
     
-    const { error: orgError } = await (supabase
+    // BUG FIX: Check if org already exists before creating
+    const { data: existing } = await (supabase
       .from('organizations' as any)
-      .insert({
-        name: orgName,
-        plan: 'starter',
-        sector: auditRequest.sector || '',
-        team_size: auditRequest.size || '',
-        created_at: new Date().toISOString()
-      }) as any);
+      .select('id')
+      .eq('name', orgName)
+      .single() as any);
     
-    if (orgError) {
-      console.error('Error creating organization:', orgError);
-      // Try to continue anyway if org exists
+    if (existing) {
+      // Org already exists, just update status
+      setToast({ message: `L'entreprise "${orgName}" existe déjà`, type: 'success' });
+    } else {
+      // Create organization from the audit request
+      const { error: orgError } = await (supabase
+        .from('organizations' as any)
+        .insert({
+          name: orgName,
+          plan: 'starter',
+          sector: auditRequest.sector || '',
+          team_size: auditRequest.size || '',
+          created_at: new Date().toISOString()
+        }) as any);
+      
+      if (orgError) {
+        console.error('Error creating organization:', orgError);
+      }
+      setToast({ message: `Demande approuvée - Entreprise "${orgName}" créée!`, type: 'success' });
     }
-    
-    // Refresh companies list after creating
-    window.location.reload(); // Force refresh to show new company
     
     // Update audit request status
     const { error } = await (supabase
@@ -94,7 +103,6 @@ export default function AuditsPage() {
 
     if (!error) {
       await fetchAudits();
-      setToast({ message: `Demande approuvée - Entreprise "${auditRequest.company_name}" créée!`, type: 'success' });
     } else {
       setToast({ message: 'Erreur lors de l\'approbation', type: 'error' });
     }
@@ -213,19 +221,29 @@ export default function AuditsPage() {
                        audit.status === 'approved' ? 'Approuvé' : 'Rejeté'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 flex gap-2">
-                    <button
-                      onClick={() => handleApprove(audit.id)}
-                      className="px-3 py-1.5 bg-[#10B981] text-white rounded-lg text-sm font-medium hover:bg-[#059669] transition-colors"
-                    >
-                      Approuver
-                    </button>
-                    <button
-                      onClick={() => handleReject(audit.id)}
-                      className="px-3 py-1.5 bg-[#EF4444] text-white rounded-lg text-sm font-medium hover:bg-[#DC2626] transition-colors"
-                    >
-                      Rejeter
-                    </button>
+                  <td className="px-4 py-3">
+                    {audit.status === 'pending' ? (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleApprove(audit.id)}
+                          className="px-3 py-1.5 bg-[#10B981] text-white rounded-lg text-sm font-medium hover:bg-[#059669] transition-colors"
+                        >
+                          Approuver
+                        </button>
+                        <button
+                          onClick={() => handleReject(audit.id)}
+                          className="px-3 py-1.5 bg-[#EF4444] text-white rounded-lg text-sm font-medium hover:bg-[#DC2626] transition-colors"
+                        >
+                          Rejeter
+                        </button>
+                      </div>
+                    ) : (
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        audit.status === 'approved' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                      }`}>
+                        {audit.status === 'approved' ? 'Traité' : 'Rejeté'}
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}
