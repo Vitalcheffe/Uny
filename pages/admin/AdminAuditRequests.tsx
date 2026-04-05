@@ -44,7 +44,7 @@ export default function AdminAuditRequests() {
         .eq('status', selectedTab === 'pending' ? 'PENDING' : selectedTab === 'approved' ? 'APPROVED' : 'REJECTED')
         .order('created_at', { ascending: false });
 
-      if (data) setRequests(data);
+      if (data) setRequests(data as AuditRequest[]);
 
       // Get stats
       const { data: allData } = await supabase.from('audit_requests').select('status');
