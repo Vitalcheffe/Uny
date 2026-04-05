@@ -67,19 +67,18 @@ export default function AuditsPage() {
       return;
     }
     
-    // BUG FIX: Check if org already exists before creating
+    // Check if org already exists
     const { data: existing } = await (supabase
       .from('organizations' as any)
       .select('id')
       .eq('name', orgName)
       .single() as any);
     
-    if (existing) {
-      // Org already exists, just update status
-      setToast({ message: `L'entreprise "${orgName}" existe déjà`, type: 'success' });
-    } else {
+    let orgId = existing?.id;
+    
+    if (!orgId) {
       // Create organization from the audit request
-      const { error: orgError } = await (supabase
+      const { data: newOrg, error: orgError } = await (supabase
         .from('organizations' as any)
         .insert({
           name: orgName,
@@ -88,11 +87,39 @@ export default function AuditsPage() {
           team_size: auditRequest.team_size || '',
           status: 'active',
           created_at: new Date().toISOString()
-        }) as any);
+        })
+        .select()
+        .single() as any);
       
       if (orgError) {
         console.error('Error creating organization:', orgError);
       }
+      orgId = newOrg?.id;
+    }
+    
+    // Create invitation for the company owner
+    if (orgId && auditRequest.email) {
+      const inviteToken = crypto.randomUUID();
+      const inviteExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      
+      await (supabase
+        .from('invitations' as any)
+        .insert({
+          organization_id: orgId,
+          email: auditRequest.email,
+          token: inviteToken,
+          role: 'OWNER',
+          status: 'pending',
+          expires_at: inviteExpiry
+        }) as any);
+      
+      const inviteUrl = `${window.location.origin}/invite/${inviteToken}`;
+      
+      setToast({ 
+        message: `Demande approuvée! Email envoyé à ${auditRequest.email}`, 
+        type: 'success' 
+      });
+    } else {
       setToast({ message: `Demande approuvée - Entreprise "${orgName}" créée!`, type: 'success' });
     }
     
