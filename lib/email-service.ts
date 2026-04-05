@@ -81,12 +81,8 @@ export async function sendInvitationEmail({
 
   // If no RESEND_API_KEY, log and return success (for development)
   if (!RESEND_API_KEY) {
-    console.log('[Email Service] Would send email:', {
-      to,
-      subject: `Votre accès UNY est prêt — ${companyName}`,
-      html: emailHtml.substring(0, 200) + '...'
-    });
-    return { success: true };
+    console.log('[Email Service] RESEND_API_KEY not configured - email not sent');
+    return { success: false, error: 'Email service not configured' };
   }
 
   try {
@@ -97,7 +93,7 @@ export async function sendInvitationEmail({
         'Authorization': `Bearer ${RESEND_API_KEY}`
       },
       body: JSON.stringify({
-        from: 'UNY <noreply@uny-gamma.vercel.app>',
+        from: 'UNY <onboarding@resend.dev>',
         to: [to],
         subject: `Votre accès UNY est prêt — ${companyName}`,
         html: emailHtml
