@@ -16,6 +16,7 @@ export default function AuditsPage() {
   const [audits, setAudits] = useState<AuditRequest[]>([]);
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   useEffect(() => {
@@ -39,8 +40,8 @@ export default function AuditsPage() {
         rejected: allRequests.filter((a: any) => a.status === 'rejected').length
       });
       
-      // Show only pending in table
-      setAudits(allRequests.filter((a: any) => a.status === 'pending'));
+      // Show ALL requests in table (not just pending)
+      setAudits(allRequests);
     }
     setLoading(false);
   };
@@ -143,14 +144,31 @@ export default function AuditsPage() {
         </div>
       </div>
 
+      {/* Filter Buttons */}
+      <div className="flex gap-2">
+        {(['all', 'pending', 'approved', 'rejected'] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              filter === f 
+                ? 'bg-[#2563EB] text-white' 
+                : 'bg-[#F8FAFC] text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            {f === 'all' ? 'Toutes' : f === 'pending' ? 'En attente' : f === 'approved' ? 'Approuvées' : 'Rejetées'}
+          </button>
+        ))}
+      </div>
+
       {/* Table */}
       <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-16px shadow-[0_1px_3px_rgba(0,0,0,0.08)] overflow-hidden">
         {loading ? (
           <div className="p-8 text-center text-slate-500">Chargement...</div>
-        ) : audits.length === 0 ? (
+        ) : audits.filter(a => filter === 'all' || a.status === filter).length === 0 ? (
           <div className="p-12 flex flex-col items-center justify-center text-slate-400">
             <ClipboardCheck className="w-12 h-12 mb-4" />
-            <p className="text-lg font-medium">Aucune demande en attente</p>
+            <p className="text-lg font-medium">Aucune demande</p>
           </div>
         ) : (
           <table className="w-full">
@@ -166,7 +184,7 @@ export default function AuditsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E2E8F0]">
-              {audits.map((audit) => (
+              {audits.filter(a => filter === 'all' || a.status === filter).map((audit) => (
                 <tr key={audit.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3 font-medium text-[#0A0A1A]">{audit.company_name}</td>
                   <td className="px-4 py-3 text-slate-600">{audit.email}</td>
