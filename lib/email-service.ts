@@ -4,8 +4,8 @@
  * Add RESEND_API_KEY to your environment variables
  */
 
-const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
-const APP_URL = import.meta.env.VITE_APP_URL || 'https://uny-gamma.vercel.app';
+const RESEND_API_KEY = import.meta.env.RESEND_API_KEY || import.meta.env.VITE_RESEND_API_KEY || process.env.RESEND_API_KEY;
+const APP_URL = import.meta.env.VITE_APP_URL || process.env.VITE_APP_URL || process.env.APP_URL || 'https://uny-gamma.vercel.app';
 
 interface SendInvitationParams {
   to: string;
@@ -79,11 +79,14 @@ export async function sendInvitationEmail({
 </html>
 `.trim();
 
-  // If no RESEND_API_KEY, log and return success (for development)
+  // If no RESEND_API_KEY, log and return error
   if (!RESEND_API_KEY) {
-    console.log('[Email Service] RESEND_API_KEY not configured - email not sent');
-    return { success: false, error: 'Email service not configured' };
+    console.log('[Email Service] RESEND_API_KEY is not set!');
+    console.log('[Email Service] Available env vars:', Object.keys(import.meta.env).filter(k => k.includes('RESEND')));
+    return { success: false, error: 'RESEND_API_KEY not configured in Vercel' };
   }
+
+  console.log('[Email Service] RESEND_API_KEY found, sending to:', to);
 
   try {
     const response = await fetch('https://api.resend.com/emails', {
