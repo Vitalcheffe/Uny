@@ -119,17 +119,18 @@ export default function AuditsPage() {
       const inviteUrl = `${window.location.origin}/invite/${inviteToken}`;
       
       // Send invitation email
-      await sendInvitationEmail({
+      const emailResult = await sendInvitationEmail({
         to: auditRequest.email,
         companyName: orgName,
         inviteLink: inviteUrl,
         expiresAt: new Date(inviteExpiry).toLocaleDateString('fr-FR')
       });
       
-      setToast({ 
-        message: `Demande approuvée! Email envoyé à ${auditRequest.email}`, 
-        type: 'success' 
-      });
+      if (emailResult.success) {
+        setToast({ message: `Demande approuvée! Email envoyé à ${auditRequest.email}`, type: 'success' });
+      } else {
+        setToast({ message: `Demande approuvée! Email non envoyé: ${emailResult.error}`, type: 'error' });
+      }
     } else {
       setToast({ message: `Demande approuvée - Entreprise "${orgName}" créée!`, type: 'success' });
     }
