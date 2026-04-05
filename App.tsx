@@ -78,7 +78,7 @@ const RootProtocol = () => {
     if (!profile?.organization_id) {
       return <Navigate to="/onboarding" replace />;
     }
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/app" replace />;  // Regular users go to /app
   }
   
   return <LandingPage />;
