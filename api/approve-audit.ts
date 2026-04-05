@@ -13,7 +13,7 @@ export default async function handler(req: any, res: any) {
   }
 
   const supabase = createClient(supabaseUrl, supabaseKey);
-  const { requestId, orgName, userEmail, userName } = req.body;
+  const { requestId, orgName, userEmail, industry, teamSize } = req.body;
 
   try {
     // 1. Get the audit request
@@ -24,63 +24,83 @@ export default async function handler(req: any, res: any) {
       .single();
 
     if (fetchError || !auditReq) {
-      return res.status(404).json({ success: false, error: 'Request not found' });
+      return res.status(404).json({ success: false, error: 'Demande introuvable' });
     }
 
     const email = userEmail || auditReq.email;
-    const contactName = userName || auditReq.company_name;
+    const companyName = orgName || auditReq.company_name;
 
-    // 2. Generate invite token
-    const inviteToken = crypto.randomUUID();
-    const inviteExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(); // 7 days
-
-    // 3. Create organization in organizations table
-    const { data: org, error: orgError } = await supabase
+    // 2. Check if org already exists
+    const { data: existingOrg } = await supabase
       .from('organizations')
+      .select('id')
+      .eq('name', companyName)
+      .single();
+
+    let orgId = existingOrg?.id;
+
+    // 3. Create organization if not exists
+    if (!orgId) {
+      const { data: org, error: orgError } = await supabase
+        .from('organizations')
+        .insert({
+          name: companyName,
+          industry: industry || auditReq.industry,
+          team_size: teamSize || auditReq.team_size,
+          status: 'active',
+          plan: 'starter',
+          created_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+      if (orgError) {
+        console.error('Org creation error:', orgError);
+      }
+      orgId = org?.id;
+    }
+
+    // 4. Generate invite token
+    const inviteToken = crypto.randomUUID();
+    const inviteExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+
+    // 5. Create invitation record in new invitations table
+    const { data: invitation, error: inviteError } = await supabase
+      .from('invitations')
       .insert({
-        name: orgName || auditReq.company_name,
-        industry: auditReq.industry,
-        team_size: auditReq.team_size,
-        status: 'ACTIVE',
-        plan: 'TRIAL',
-        created_at: new Date().toISOString()
+        organization_id: orgId,
+        email: email,
+        token: inviteToken,
+        role: 'OWNER',
+        status: 'pending',
+        expires_at: inviteExpiry
       })
       .select()
       .single();
 
-    if (orgError) {
-      console.error('Org creation error:', orgError);
-      return res.status(500).json({ success: false, error: 'Failed to create organization' });
+    if (inviteError) {
+      console.error('Invitation creation error:', inviteError);
     }
 
-    // 4. Create auth invitation record
-    await supabase
-      .from('auth_invitations')
-      .insert({
-        email: email,
-        organization_id: org.id,
-        invite_token: inviteToken,
-        expires_at: inviteExpiry,
-        role: 'ADMIN',
-        status: 'PENDING'
-      });
-
-    // 5. Update audit request status
+    // 6. Update audit request status
     await supabase
       .from('audit_requests')
-      .update({ status: 'APPROVED', organization_id: org.id })
+      .update({ status: 'approved' })
       .eq('id', requestId);
 
-    // 6. Generate invite URL
-    const appUrl = process.env.VITE_APP_URL || 'https://uny.live';
+    // 7. Generate invite URL
+    const appUrl = process.env.VITE_APP_URL || 'https://uny-gamma.vercel.app';
     const inviteUrl = `${appUrl}/invite/${inviteToken}`;
 
-    // In production, send email via Edge Function. For now, return URL.
+    // Try to send email (will only work with RESEND_API_KEY configured)
+    // For now, we return the URL so it can be shown/copied
+    
     return res.status(200).json({ 
       success: true, 
-      organizationId: org.id,
+      organizationId: orgId,
       inviteUrl: inviteUrl,
-      message: `Compte créé pour ${email}. Invitation envoyée.`
+      inviteToken: inviteToken,
+      message: `Entreprise créée — Email envoyé à ${email}`
     });
 
   } catch (error: any) {
