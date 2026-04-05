@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ClipboardCheck, Check, X, AlertCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { sendInvitationEmail } from '../../lib/email-service';
+import { sendInvitationEmail } from '../../lib/email-simple';
 
 interface AuditRequest {
   id: string;

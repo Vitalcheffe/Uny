@@ -89,14 +89,9 @@ export async function sendInvitationEmail({
   console.log('[Email Service] RESEND_API_KEY found, sending to:', to);
 
   try {
-    // Use the Resend API
+    // Try direct JSON endpoint
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${RESEND_API_KEY.trim()}`,
-        'Resend-Version': '2023-12-01'
-      },
       body: JSON.stringify({
         from: 'UNY <onboarding@resend.dev>',
         to: [to],
