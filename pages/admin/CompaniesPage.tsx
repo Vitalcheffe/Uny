@@ -104,7 +104,8 @@ export default function CompaniesPage() {
           tokens_this_month: org.tokens_used_this_month || 0,
           last_active: org.updated_at || org.created_at,
           revenue: org.total_revenue || 0,
-          status: org.active === 'active' ? 'active' : 'suspended',
+          // All orgs without status column are considered active (they have a plan)
+          status: org.plan ? 'active' : 'suspended',
           created_at: org.created_at
         };
       }));
