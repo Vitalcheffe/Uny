@@ -86,6 +86,7 @@ export default function AuditsPage() {
           plan: 'starter',
           sector: auditRequest.industry || '',
           team_size: auditRequest.team_size || '',
+          status: 'active',
           created_at: new Date().toISOString()
         }) as any);
       
@@ -110,6 +111,22 @@ export default function AuditsPage() {
   };
 
   const handleReject = async (id: string) => {
+    // First get the audit request details
+    const { data: auditRequest } = await (supabase
+      .from('audit_requests' as any)
+      .select('*, company_name')
+      .eq('id', id)
+      .single() as any);
+    
+    if (auditRequest?.company_name) {
+      // If org exists, suspend it
+      await (supabase
+        .from('organizations' as any)
+        .update({ status: 'suspended' })
+        .eq('name', auditRequest.company_name) as any);
+    }
+    
+    // Update audit request status
     const { error } = await (supabase
       .from('audit_requests' as any)
       .update({ status: 'rejected' })
