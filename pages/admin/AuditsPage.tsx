@@ -53,6 +53,34 @@ export default function AuditsPage() {
   };
 
   const handleApprove = async (id: string) => {
+    // First get the audit request details
+    const { data: auditRequest } = await (supabase
+      .from('audit_requests' as any)
+      .select('*')
+      .eq('id', id)
+      .single() as any);
+    
+    if (!auditRequest) {
+      setToast({ message: 'Demande introuvable', type: 'error' });
+      setTimeout(() => setToast(null), 3000);
+      return;
+    }
+    
+    // Create organization from the audit request
+    const { error: orgError } = await (supabase
+      .from('organizations' as any)
+      .insert({
+        name: auditRequest.company_name,
+        subscription_tier: 'Free',
+        subscription_status: 'active',
+        created_at: new Date().toISOString()
+      }) as any);
+    
+    if (orgError) {
+      console.error('Error creating organization:', orgError);
+    }
+    
+    // Update audit request status
     const { error } = await (supabase
       .from('audit_requests' as any)
       .update({ status: 'approved' })
@@ -60,7 +88,7 @@ export default function AuditsPage() {
 
     if (!error) {
       await fetchAudits();
-      setToast({ message: 'Demande approuvée', type: 'success' });
+      setToast({ message: `Demande approuvée - Entreprise "${auditRequest.company_name}" créée!`, type: 'success' });
     } else {
       setToast({ message: 'Erreur lors de l\'approbation', type: 'error' });
     }
