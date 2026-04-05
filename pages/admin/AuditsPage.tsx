@@ -6,8 +6,8 @@ interface AuditRequest {
   id: string;
   company_name: string;
   email: string;
-  sector: string;
-  size: string;
+  industry: string;
+  team_size: string;
   created_at: string;
   status: 'pending' | 'approved' | 'rejected';
 }
@@ -84,8 +84,8 @@ export default function AuditsPage() {
         .insert({
           name: orgName,
           plan: 'starter',
-          sector: auditRequest.sector || '',
-          team_size: auditRequest.size || '',
+          sector: auditRequest.industry || '',
+          team_size: auditRequest.team_size || '',
           created_at: new Date().toISOString()
         }) as any);
       
@@ -208,8 +208,8 @@ export default function AuditsPage() {
                 <tr key={audit.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3 font-medium text-[#0A0A1A]">{audit.company_name}</td>
                   <td className="px-4 py-3 text-slate-600">{audit.email}</td>
-                  <td className="px-4 py-3 text-slate-600">{audit.sector}</td>
-                  <td className="px-4 py-3 text-slate-600">{audit.size}</td>
+                  <td className="px-4 py-3 text-slate-600">{audit.industry}</td>
+                  <td className="px-4 py-3 text-slate-600">{audit.team_size}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(audit.created_at)}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
